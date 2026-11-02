@@ -77,6 +77,7 @@ export async function readTandyZip(file: File): Promise<TandyProgramPack> {
       throw new Error("ZIP contains no .EXE, .COM or .BAT program to launch.");
     const files = [];
     for (const { path, entry } of fileEntries) {
+      if (!("getData" in entry)) throw new Error("Unsupported directory entry in DOS media.");
       const blob = await entry.getData(new BlobWriter());
       if (blob.size !== entry.uncompressedSize || blob.size > MAX_ENTRY) {
         throw new Error("Archive extraction size mismatch.");
