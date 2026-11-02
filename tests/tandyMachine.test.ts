@@ -60,7 +60,7 @@ test("rejects damaged FAT12 image metadata",async()=>{
   const original=floppy();
   const data=new Uint8Array(await original.arrayBuffer());
   data[510]=0;
-  await assert.rejects(()=>readTandyFloppy(new File([data],"floppy.img"))/unsupported FAT12/i);
+  await assert.rejects(()=>readTandyFloppy(new File([data],"floppy.img")), /supported 720 KB FAT12/i);
 });
 
 test("can unpack a user-owned DOS ZIP and discover its executable",async()=>{
