@@ -18,6 +18,16 @@ A separate real DOSBox-based game cabinet is now available through the browser, 
 
 This Rung 2 integration is hosted via js-dos's maintained `latest` CDN rather than packaging GPL code into RetroVerse. That entails an internet dependency and possible upstream API drift, so production testing and a later pinned/self-hosted build are planned. js-dos retains its GPL-2.0 license; our application license does not supersede it.
 
+## Rung 5: Personal DOS game vault
+
+The DOS Game Cabinet now has a persistent, browser-local shelf for your own .jsdos game bundles. Select a bundle in the cabinet, choose **SAVE SELECTED BUNDLE**, and then PLAY, EXPORT or REMOVE it from the shelf. Data is stored as Blobs in IndexedDB and remains on the visitor's browser/device; RetroVerse does not receive or host the files. The shelf supports searching, a 128 MiB single-game limit and a 512 MiB local shelf limit (actual browser quota may be lower). Duplicate file names are allowed because users may own multiple versions.
+
+**Risk and backup warning:** This storage is not encrypted or synced. Clearing website data, evictions, private browsing, or changing devices can delete it. Other scripts on the same origin may have IndexedDB access, including external player code loaded into the page. Use EXPORT and keep original files. Game saves are *separate* from the library's stored game bundles and remain managed by the js-dos runtime.
+
+Adding to the shelf validates only filename extension and a ZIP-like header, not ownership, actual game compatibility, archive security, or freedom from malware. Run only trusted, legally usable game bundles.
+
+**ScummVM self-hosting:** See [docs/scummvm-self-hosting.md](docs/scummvm-self-hosting.md) for a gated engineering plan. Rung 5 does not falsely claim the ScummVM WebAssembly engine has been built or hosted by RetroVerse.
+
 ## Rung 3: classic Amiga
 
 The Amiga station embeds the real [Scripted Amiga Emulator](https://github.com/naTmeg/ScriptedAmigaEmulator) (SAE) in a dedicated same-origin frame. The first implementation preserves its original control panel: choose a machine (A500, A1200 and more), supply your own **authorized** Kickstart ROM and ADF floppy images, then press Start in SAE. It provides pause, reset, mute and fullscreen options. The separate full-page link avoids awkward nested focus issues.
@@ -72,7 +82,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports, local saves, and a searchable Community Classics wishlist. Future: verified licensed demos, controller presets, self-hosted runtime.
 3. **Amiga:** real SAE engine, selectable Amiga hardware, user-provided Kickstart/ADF media; future native controls and compatibility testing.
 4. **Adventures:** external ScummVM WebAssembly demo launch, optional browser embedding and searchable freeware/owned-game index. Future: self-hosted build and native game library.
-5. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+5. **Local Game Vault:** IndexedDB-backed DOS game shelf with play, export and remove; ScummVM self-hosting plan. Future: independent WebAssembly interpreter build.
+6. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 

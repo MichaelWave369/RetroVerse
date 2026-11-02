@@ -13,7 +13,7 @@ export default function CommunityCatalog() {
   return (
     <section className="classic-catalog" aria-label="Community DOS classics wishlist">
       <div className="section-head">
-        <span>03 / COMMUNITY CLASSICS WISHLIST</span>
+        <span>04 / COMMUNITY CLASSICS WISHLIST</span>
         <span className="section-note">THE GAMES PEOPLE REMEMBER</span>
       </div>
       <div className="classic-headline">

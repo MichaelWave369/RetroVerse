@@ -259,3 +259,37 @@ footer a { text-decoration: none; color: #c4e78e; }
 .adventure-credit a { color:#c7e89a; }
 @media(max-width:1020px) { .adventure-launch { grid-template-columns:1fr; } .adventure-monitor { aspect-ratio:16/10; } }
 @media(max-width:720px) { .adventure-sign { display:none; } .adventure-intro { padding:12px 0 15px; } .adventure-monitor { min-height:340px; aspect-ratio:5/4; border-width:7px; } .adventure-console { padding:19px; } .adventure-game-list { grid-template-columns:1fr; } .adventure-bottom { flex-direction:column; align-items:flex-start; } .adventure-room{margin-top:42px} }
+
+
+/* Rung 5: IndexedDB-backed personal game vault */
+.game-vault{margin-top:64px}
+.vault-heading{display:flex;justify-content:space-between;align-items:center;gap:25px;padding:12px 0 22px}
+.vault-heading h2{font-size:clamp(35px,5.5vw,67px);margin:15px 0;letter-spacing:-.065em}
+.vault-heading h2 em{color:#d2f590;font-style:normal}
+.vault-heading p{font-size:14px;line-height:1.6;color:#a6bfae;max-width:800px}
+.vault-count{flex:none;display:flex;flex-direction:column;align-items:center;padding:20px 25px;background:#203b30;border:1px solid #58785d}
+.vault-count b{font-size:46px;color:#d2f68d;line-height:1}
+.vault-count span{font:9px "DM Mono",monospace;color:#b5cdb1;margin-top:9px}
+.vault-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px;border:1px solid #54765a;background:#1c3530}
+.vault-toolbar strong{display:block;color:#e5f4cb;font:15px "DM Mono",monospace;margin-top:6px}
+.vault-toolbar p{color:#a7c3b0;font-size:11px;line-height:1.5;margin:8px 0 0}
+.vault-toolbar button{background:#d0f28a;color:#1d2d24;border:1px solid #e0f5a9;padding:15px 19px;white-space:normal;font:11px "DM Mono",monospace}
+.vault-toolbar button:disabled{opacity:.4}
+.vault-search{width:100%;margin:3px 0 14px;padding:14px;background:#112725;color:#e8f1de;border:1px solid #52795f;border-radius:3px;font:12px "DM Mono",monospace}
+.vault-search::placeholder{color:#7f9b8d}
+.vault-list{display:grid;gap:8px}
+.vault-game{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:13px;padding:16px;background:#1c3330;border:1px solid #40624f}
+.vault-game-info{min-width:0;display:flex;align-items:center;gap:16px}
+.vault-game-info>span{font-size:29px;color:#c5e88a}
+.vault-game-info strong{font-size:15px;display:block;overflow-wrap:anywhere;color:#ebf3df}
+.vault-game-info small{display:block;font:10px "DM Mono",monospace;color:#9db6a4;margin-top:7px}
+.vault-game-actions{display:flex;gap:8px;flex-wrap:wrap}
+.vault-game-actions button{border:1px solid #688b6e;background:#263f37;color:#e3f3c4;padding:11px 13px;font:10px "DM Mono",monospace}
+.vault-game-actions button.vault-delete{border-color:#9a655c;color:#efb7ab}
+.vault-game-actions button:hover:not(:disabled){filter:brightness(1.15)}
+.vault-empty{padding:30px;text-align:center;background:#152a28;color:#a7c0ae;border:1px dashed #496b57;font:11px/1.8 "DM Mono",monospace}
+.vault-status{border-left:2px solid #d4f48c;background:#182d28;color:#c2d7b6;margin-top:18px;padding:13px;font:11px/1.6 "DM Mono",monospace;overflow-wrap:anywhere}
+.vault-warning{color:#99b5a4;font-size:11px;line-height:1.7;margin:17px 0 0}
+.vault-warning strong{color:#e6c990}
+@media(max-width:800px){.vault-heading{align-items:flex-start;flex-direction:column}.vault-count{display:none}.vault-toolbar{align-items:stretch;flex-direction:column}.vault-game{align-items:flex-start;flex-direction:column}.vault-game-actions{width:100%}.vault-game-actions button{flex:1}}
+@media(max-width:520px){.game-vault{margin-top:40px}}
