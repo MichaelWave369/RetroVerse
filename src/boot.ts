@@ -11,7 +11,7 @@ export interface Profile {
 }
 
 export const profiles: Profile[] = [
-  { id: "freedos", label: "FreeDOS demo", detail: "Free, preconfigured DOS hard disk from the v86 demo", needsOwnMedia: false },
+  { id: "freedos", label: "FreeDOS demo", detail: "Bootable FreeDOS 720 KB floppy from the v86 demo", needsOwnMedia: false },
   { id: "dos330", label: "MS-DOS 3.30", detail: "Insert a legally obtained DOS 3.30 disk image", needsOwnMedia: true },
   { id: "dos500", label: "MS-DOS 5.0", detail: "Insert a legally obtained DOS 5.0 disk image", needsOwnMedia: true },
   { id: "dos622", label: "MS-DOS 6.22", detail: "Insert a legally obtained DOS 6.22 disk image", needsOwnMedia: true },
@@ -48,7 +48,7 @@ export function createOptions(params: {
   };
 
   if (profile === "freedos") {
-    options.hda = { url: freeDosSampleUrl };
+    options.fda = { url: freeDosSampleUrl };
   } else if (mediaBuffer) {
     options[mediaType === "floppy" ? "fda" : mediaType === "harddisk" ? "hda" : "cdrom"] =
       mediaFromBuffer(mediaBuffer);
