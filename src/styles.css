@@ -308,3 +308,8 @@ footer a { text-decoration: none; color: #c4e78e; }
 .vault-backup-buttons button:hover:not(:disabled){filter:brightness(1.13)}
 .vault-backup-buttons button:disabled{opacity:.4}
 @media(max-width:800px){.vault-backup{flex-direction:column;align-items:stretch}.vault-backup-buttons{width:100%}}
+
+
+/* Rung 7 portable game progress controls fit the Rung 2 arcade control panel */
+.arcade-panel .action-grid .form-label{margin:0}
+.arcade-panel .action-grid button:disabled{cursor:not-allowed}

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import CommunityCatalog from "./CommunityCatalog";
 import GameVault from "./GameVault";
+import { bundleSaveKey, readChanges, writeChanges, deleteChanges } from "./saveChanges";
+import { exportProgressArchive, importProgressArchive } from "./saveArchive";
 
 const loaderJs = "https://v8.js-dos.com/latest/js-dos.js";
 const loaderCss = "https://v8.js-dos.com/latest/js-dos.css";
@@ -62,6 +64,9 @@ export default function GameCabinet() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const blobRef = useRef<string | null>(null);
   const generation = useRef(0);
+  const progressInput = useRef<HTMLInputElement | null>(null);
+  const [progressBusy, setProgressBusy] = useState(false);
+  const [saveIdentity, setSaveIdentity] = useState<{ key: string; title: string } | null>(null);
 
   async function dispose() {
     const old = playerRef.current;
@@ -102,12 +107,16 @@ export default function GameCabinet() {
     await dispose();
     if (id !== generation.current) return;
     try {
-      await loadJsDos();
+      const [, key] = await Promise.all([
+        loadJsDos(),
+        kind === "file" && chosenFile ? bundleSaveKey(chosenFile) : Promise.resolve(null),
+      ]);
       if (id !== generation.current || !divRef.current || !window.Dos) return;
       const bundleUrl = kind === "demo" ? demoUrl : URL.createObjectURL(chosenFile!);
       if (kind === "file") blobRef.current = bundleUrl;
       const label = kind === "demo" ? "Digger (upstream demonstration)" : chosenFile!.name;
       setSource(label);
+      setSaveIdentity(key ? { key, title: label } : null);
       // External emulator assets are from the js-dos CDN, not from our repo.
       const player = window.Dos(divRef.current, {
         url: bundleUrl,
@@ -118,7 +127,16 @@ export default function GameCabinet() {
         autoStart: true,
         noCursor: false,
         autoSave: true,
-        fsChanges: { local: true },
+        // The Digger demo deliberately keeps its existing upstream save key.
+        // Owned .jsdos bundles use SHA-256 identity, so Blob URL changes and
+        // portable vault restores do not lose their associated progress.
+        fsChanges: key ? {
+          local: true,
+          urlToKey: async () => key,
+          pull: (storageKey: string) => readChanges(storageKey),
+          push: (storageKey: string, bytes: Uint8Array) => writeChanges(storageKey, bytes),
+          delete: (storageKey: string) => deleteChanges(storageKey),
+        } : { local: true },
         startIpxServer: false,
         onEvent: (event: string) => {
           if (id !== generation.current) return;
@@ -169,6 +187,67 @@ export default function GameCabinet() {
     }
   }
 
+
+  async function exportProgress() {
+    if (!saveIdentity || progressBusy) return;
+    setProgressBusy(true);
+    let url: string | null = null;
+    try {
+      // Trigger js-dos to persist changes after the game has saved its own files.
+      if (playerRef.current) await playerRef.current.save();
+      const bytes = await readChanges(saveIdentity.key);
+      if (!bytes) {
+        setMessage("No saved game files found yet. Save inside the DOS game, then press SAVE and EXPORT PROGRESS.");
+        return;
+      }
+      const archive = await exportProgressArchive(saveIdentity.key, saveIdentity.title, bytes);
+      url = URL.createObjectURL(archive);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "retroverse-progress-" + saveIdentity.key.slice(-12) + ".zip";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setMessage("Portable progress backup requested. Keep the ZIP and your original .jsdos game bundle together.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not export game progress.");
+    } finally {
+      if (url) {
+        const objectUrl = url;
+        window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+      }
+      setProgressBusy(false);
+    }
+  }
+
+  async function restoreProgress(archive: File) {
+    if (progressBusy || status === "loading") return;
+    setProgressBusy(true);
+    try {
+      // When idle, match the current chosen file so progress cannot
+      // accidentally bind to the previous game from this session.
+      const identity = status === "playing" || status === "ready"
+        ? saveIdentity
+        : file
+          ? { key: await bundleSaveKey(file), title: file.name }
+          : saveIdentity;
+      if (!identity) throw new Error("Select or launch an owned .jsdos game first. Demo progress uses separate storage.");
+      const bytes = await importProgressArchive(archive, identity.key);
+      if (!window.confirm("Restore saved progress for " + identity.title + "? This replaces that game's stored progress. The game will need restarting.")) {
+        setMessage("Progress restore canceled. Your previous save is unchanged.");
+        return;
+      }
+      // Existing player might overwrite imported changes during stop.
+      // Stop FIRST, write verified bytes SECOND, then explicitly relaunch.
+      if (playerRef.current) await stop();
+      await writeChanges(identity.key, bytes);
+      setSaveIdentity(identity);
+      setMessage("Progress restored for " + identity.title + ". Start that same game again to load the imported files.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not restore progress.");
+    } finally { setProgressBusy(false); }
+  }
+
   const active = status === "ready" || status === "playing";
   return (
     <section className="cabinet-room" aria-label="DOS game cabinet">
@@ -211,6 +290,20 @@ export default function GameCabinet() {
           {file && <div className="arcade-file-label">READY TO LOAD<strong>{file.name} ({(file.size / (1024 * 1024)).toFixed(1)} MiB)</strong></div>}
           <button type="button" className="primary-action" disabled={!file || status === "loading"} onClick={() => void start("file")}>▶ BOOT MY GAME</button>
           <p className="setting-hint">Accepts .jsdos archives (up to 256 MiB). Your own bundle is read via a local browser Blob URL; this app does not upload it to a RetroVerse server.</p>
+
+                <div className="panel-divider" />
+                <div className="form-label">03 / PORTABLE GAME PROGRESS</div>
+                <p className="setting-hint">For your own .jsdos bundles. First save your game inside its DOS menus, then click SAVE above and EXPORT here. The ZIP contains game file-system changes, not a live emulator snapshot.</p>
+                <div className="action-grid">
+                  <button type="button" disabled={!saveIdentity || progressBusy || status === "loading"} onClick={() => void exportProgress()}>↓ EXPORT PROGRESS</button>
+                  <button type="button" disabled={progressBusy || status === "loading" || (!saveIdentity && !file)} onClick={() => progressInput.current?.click()}>↑ RESTORE PROGRESS</button>
+                </div>
+                <input hidden type="file" accept=".zip,application/zip" ref={progressInput} onChange={e=>{
+                  const backup=e.currentTarget.files?.[0];
+                  e.currentTarget.value="";
+                  if (backup) void restoreProgress(backup);
+                }} />
+                <p className="setting-hint">Restores only to the exact matching game bundle (SHA-256). A valid restore replaces that game's old progress and requires restarting it. Digger retains its upstream save behavior for compatibility.</p>
           <div className="arcade-info">
             <h4>BUILDING A GAME BUNDLE</h4>
             <p>A .jsdos file is a ZIP-compatible package with DOS game files and the required <code>.jsdos/dosbox.conf</code>. Make yours using the official <a href="https://js-dos.com/v7/build/docs/jsdos-bundle/" target="_blank" rel="noreferrer">bundle guide</a>.</p>
