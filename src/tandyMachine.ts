@@ -24,7 +24,7 @@ const MAX_FILES = 400;
 const PATH_MAX = 125;
 // Deliberately limited to simple DOS 8.3 names to avoid accidental execution
 // of shell special characters. Users can repackage their own archives.
-const DOS_PART = /^[A-Za-z0-9_~!#$%&'()+@^{}-]{1,8}(?:\.[A-Za-z0-9_~!#$%&'()+@^{}-]{1,3})?$/;
+const DOS_PART = /^[A-Za-z0-9_$~-]{1,8}(?:\.[A-Za-z0-9_$~-]{1,3})?$/;
 
 function safePath(name: string): string {
   const norm = name.replace(/\\/g, "/");
@@ -149,3 +149,110 @@ export const WELCOME_FILE = {
     "",
   ].join("\r\n")),
 };
+
+
+/**
+ * Extract files from a 720 KiB FAT12 floppy into DOSBox's virtual drive.
+ * Does not reproduce the original Tandy ROM boot, BIOS or a real floppy drive.
+ */
+export async function readTandyFloppy(file: File): Promise<TandyProgramPack> {
+  if (!file.name.toLowerCase().endsWith(".img") || file.size !== 737280)
+    throw new Error("Choose an uncompressed 720 KB Tandy .img floppy image.");
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const u16 = (n: number) => view.getUint16(n, true);
+  const bps = u16(11), spc = bytes[13], reserved = u16(14);
+  const fatCount = bytes[16], rootEntries = u16(17);
+  const totalSectors = u16(19), fatSectors = u16(22);
+  if (bps !== 512 || spc < 1 || spc > 8 || (spc & (spc - 1)) ||
+      reserved < 1 || reserved > 16 || fatCount < 1 || fatCount > 3 ||
+      rootEntries < 16 || rootEntries > 256 || totalSectors !== 1440 ||
+      fatSectors < 1 || fatSectors > 16 ||
+      bytes[510] !== 0x55 || bytes[511] !== 0xaa) {
+    throw new Error("Not a supported 720 KB FAT12 DOS floppy image.");
+  }
+  const fatStart = reserved * bps;
+  const rootStart = (reserved + fatCount * fatSectors) * bps;
+  const rootSize = rootEntries * 32;
+  const dataStart = rootStart + Math.ceil(rootSize / bps) * bps;
+  const clusterBytes = bps * spc;
+  const maxCluster = Math.floor((bytes.length - dataStart) / clusterBytes) + 1;
+  if (rootStart + rootSize > bytes.length || dataStart >= bytes.length || maxCluster < 2)
+    throw new Error("Invalid floppy layout.");
+  const fatNext = (cluster: number) => {
+    const pos = fatStart + Math.floor(cluster * 3 / 2);
+    if (pos + 1 >= fatStart + fatSectors * bps) throw new Error("FAT12 entry outside table.");
+    const word = bytes[pos] | bytes[pos + 1] << 8;
+    return (cluster & 1) ? word >> 4 : word & 0xfff;
+  };
+  function clusters(start: number): number[] {
+    const found: number[] = [];
+    const seen = new Set<number>();
+    let cluster = start;
+    while (cluster >= 2 && cluster <= maxCluster && !seen.has(cluster)) {
+      seen.add(cluster);
+      found.push(cluster);
+      const next = fatNext(cluster);
+      if (next >= 0xff8) return found;
+      if (next < 2 || next >= 0xff0) break;
+      cluster = next;
+      if (found.length > 1440) break;
+    }
+    throw new Error("Floppy has a damaged or cyclic FAT12 cluster chain.");
+  }
+  function bytesFor(first: number, size: number, wholeDirectory = false): Uint8Array {
+    if (size === 0 && !wholeDirectory) return new Uint8Array(0);
+    if (size > 737280) throw new Error("Floppy file exceeds the whole disk.");
+    const chain = clusters(first);
+    const total = chain.length * clusterBytes;
+    if (!wholeDirectory && total < size) throw new Error("FAT12 file chain shorter than file size.");
+    const output = new Uint8Array(wholeDirectory ? total : size);
+    let used = 0;
+    for (const index of chain) {
+      if (used >= output.length) break;
+      const offset = dataStart + (index - 2) * clusterBytes;
+      if (offset + clusterBytes > bytes.length) throw new Error("FAT12 cluster outside disk.");
+      const length = Math.min(clusterBytes, output.length - used);
+      output.set(bytes.subarray(offset, offset + length), used);
+      used += length;
+    }
+    return output;
+  }
+  const files: TandyProgramPack["files"] = [];
+  const visited = new Set<number>();
+  const decoder = new TextDecoder("ascii");
+  function parseDir(data: Uint8Array, prefix: string, depth: number): void {
+    if (depth > 4) throw new Error("Floppy directory nesting too deep.");
+    for (let i = 0; i + 32 <= data.length; i += 32) {
+      if (data[i] === 0) break;
+      if (data[i] === 0xe5) continue;
+      const attr = data[i + 11];
+      if (attr === 0x0f || (attr & 0x08)) continue;
+      const base = decoder.decode(data.subarray(i, i + 8)).trim();
+      const ext = decoder.decode(data.subarray(i + 8, i + 11)).trim();
+      if (base === "." || base === "..") continue;
+      const path = safePath(prefix + base + (ext ? "." + ext : ""));
+      const first = data[i + 26] | data[i + 27] << 8;
+      const size = (data[i + 28] | data[i + 29] << 8 |
+        data[i + 30] << 16 | data[i + 31] << 24) >>> 0;
+      if ((attr & 0x10) !== 0) {
+        if (first < 2 || visited.has(first)) throw new Error("Invalid FAT12 subdirectory.");
+        visited.add(first);
+        parseDir(bytesFor(first, 0, true), path + "/", depth + 1);
+      } else {
+        if (files.length >= 300) throw new Error("Too many files in this floppy image.");
+        files.push({ path, contents: bytesFor(first, size) });
+      }
+    }
+  }
+  parseDir(bytes.subarray(rootStart, rootStart + rootSize), "", 0);
+  if (!files.length) throw new Error("No readable files found on this Tandy floppy.");
+  const programs = files.map(f => f.path).filter(p => /\.(COM|EXE|BAT)$/.test(p)).sort();
+  return {
+    label: file.name,
+    files,
+    programs,
+    compressedBytes: file.size,
+    uncompressedBytes: files.reduce((sum, entry) => sum + entry.contents.byteLength, 0),
+  };
+}
