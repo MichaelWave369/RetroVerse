@@ -9,18 +9,21 @@
     "prebuild": "node scripts/prepare-assets.mjs && node scripts/prepare-amiga.mjs",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --import tsx --test tests/vaultBackup.test.ts"
   },
   "dependencies": {
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "v86": "0.5.473"
+    "v86": "0.5.473",
+    "@zip.js/zip.js": "2.24.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "^5.9.0",
-    "vite": "^7.1.0"
+    "vite": "^7.1.0",
+    "tsx": "4.20.6"
   }
 }

@@ -28,6 +28,18 @@ Adding to the shelf validates only filename extension and a ZIP-like header, not
 
 **ScummVM self-hosting:** See [docs/scummvm-self-hosting.md](docs/scummvm-self-hosting.md) for a gated engineering plan. Rung 5 does not falsely claim the ScummVM WebAssembly engine has been built or hosted by RetroVerse.
 
+## Rung 6: Portable DOS game shelf backups
+
+The browser-local Game Vault can now export all saved `.jsdos` bundles into a single **RetroVerse ZIP backup** using [zip.js](https://github.com/gildas-lormeau/zip.js) (BSD-3-Clause). The archive has a versioned manifest and opaque game IDs, with original filenames and sizes. The ZIP is created locally; no RetroVerse backend receives game data.
+
+Use **Back up entire shelf** to download and keep a copy, then **Restore backup ZIP** to import it into another browser. The importer validates the format, expected archive entries, game sizes, game ZIP headers and overall quotas. Imports append new entries instead of deleting the existing library. Importing twice creates duplicates; a failed import can leave already-restored games in place. The UI reports progress and errors. Memory usage and browser limits still affect large backups.
+
+**Important:** Portable ZIP backups contain stored **game bundles only**. They do *not* include separate js-dos save files, v86 snapshots, Amiga ROMs, SCUMM game data, or emulator configuration. Continue exporting critical saves through each relevant emulator.
+
+To run archive compatibility checks locally:
+
+`npm test`
+
 ## Rung 3: classic Amiga
 
 The Amiga station embeds the real [Scripted Amiga Emulator](https://github.com/naTmeg/ScriptedAmigaEmulator) (SAE) in a dedicated same-origin frame. The first implementation preserves its original control panel: choose a machine (A500, A1200 and more), supply your own **authorized** Kickstart ROM and ADF floppy images, then press Start in SAE. It provides pause, reset, mute and fullscreen options. The separate full-page link avoids awkward nested focus issues.
@@ -82,8 +94,9 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports, local saves, and a searchable Community Classics wishlist. Future: verified licensed demos, controller presets, self-hosted runtime.
 3. **Amiga:** real SAE engine, selectable Amiga hardware, user-provided Kickstart/ADF media; future native controls and compatibility testing.
 4. **Adventures:** external ScummVM WebAssembly demo launch, optional browser embedding and searchable freeware/owned-game index. Future: self-hosted build and native game library.
-5. **Local Game Vault:** IndexedDB-backed DOS game shelf with play, export and remove; ScummVM self-hosting plan. Future: independent WebAssembly interpreter build.
-6. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+5. **Local Game Vault:** IndexedDB-backed DOS game shelf with play, export and remove; ScummVM self-hosting plan.
+6. **Portable backups:** verified ZIP export/import of owned .jsdos game collections with format tests. Future: full save-game portability.
+7. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 

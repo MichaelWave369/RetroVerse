@@ -27,6 +27,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Type-check
         run: npm run typecheck
+      - name: Portable archive roundtrip tests
+        run: npm test
       - name: Build site and fetch open firmware
         run: npm run build
         env:

@@ -293,3 +293,18 @@ footer a { text-decoration: none; color: #c4e78e; }
 .vault-warning strong{color:#e6c990}
 @media(max-width:800px){.vault-heading{align-items:flex-start;flex-direction:column}.vault-count{display:none}.vault-toolbar{align-items:stretch;flex-direction:column}.vault-game{align-items:flex-start;flex-direction:column}.vault-game-actions{width:100%}.vault-game-actions button{flex:1}}
 @media(max-width:520px){.game-vault{margin-top:40px}}
+
+
+/* Rung 6: portable on-device Game Vault archives */
+.vault-backup{margin:18px 0 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:23px;border:1px solid #608060;background:linear-gradient(130deg,#1c3830,#243e37)}
+.vault-backup>div:first-child{max-width:720px}
+.vault-backup strong{font:17px "Space Grotesk",sans-serif;color:#dff2c0;display:block;margin:9px 0}
+.vault-backup p{font-size:12px;line-height:1.6;color:#bad0bb;margin:7px 0}
+.vault-backup .vault-backup-limit{font-size:11px;color:#e0cfa6}
+.vault-backup .vault-backup-limit b{color:#fff1c5}
+.vault-backup-buttons{display:flex;flex-direction:column;gap:10px;min-width:235px}
+.vault-backup-buttons button{font:11px "DM Mono",monospace;border:1px solid #81a273;padding:14px 16px;background:#345345;color:#e3f6c1;min-height:48px}
+.vault-backup-buttons button:first-child{background:#d0f18a;color:#24362d}
+.vault-backup-buttons button:hover:not(:disabled){filter:brightness(1.13)}
+.vault-backup-buttons button:disabled{opacity:.4}
+@media(max-width:800px){.vault-backup{flex-direction:column;align-items:stretch}.vault-backup-buttons{width:100%}}
