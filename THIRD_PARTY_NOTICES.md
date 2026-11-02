@@ -2,6 +2,7 @@
 
 RetroVerse's application code is MIT-licensed. The following components retain their independent licenses:
 
+- [zip.js](https://github.com/gildas-lormeau/zip.js), BSD-3-Clause, Copyright (c) 2023 Gildas Lormeau. Used locally to build and read portable Game Vault ZIP backups. See upstream LICENSE for source and conditions; this dependency retains its license independently of RetroVerse MIT code.
 - [v86](https://github.com/copy/v86), BSD-2-Clause. Installed via the official npm package and built into the application.
 - [SeaBIOS](https://www.seabios.org/) BIOS firmware and VGA BIOS from the v86 upstream repository, LGPL. Downloaded at build time from pinned upstream commit 315b2b0b758703ef0e6cc7b4088d6068f83f3c20. See [v86 bios/COPYING.LESSER](https://github.com/copy/v86/blob/master/bios/COPYING.LESSER) and the upstream source to obtain firmware source and license terms.
 - [js-dos v8](https://js-dos.com/), GPL-2.0. Browser game-cabinet player and its emulator runtimes are loaded from the js-dos upstream CDN at runtime, rather than redistributed in our repository. See upstream source and its license requirements. The documented Digger example is linked from that upstream service, and no game files are repackaged.
