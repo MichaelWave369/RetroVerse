@@ -203,3 +203,59 @@ footer a { text-decoration: none; color: #c4e78e; }
 .amiga-source a{color:#d6f48f}
 @media(max-width:950px){.amiga-steps{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.amiga-intro{flex-direction:column;align-items:flex-start}.amiga-plate{display:none}.amiga-steps{grid-template-columns:1fr}.amiga-iframe{height:750px}.amiga-room{margin-top:40px}}
+
+
+/* Rung 4: classic adventures and optional third-party ScummVM player portal */
+.adventure-room { margin-top:60px; }
+.adventure-intro { display:flex; align-items:center; justify-content:space-between; gap:34px; padding:20px 0 32px; }
+.adventure-intro h2 { font-size:clamp(45px,6.4vw,85px); line-height:1.03; letter-spacing:-.065em; margin:17px 0; }
+.adventure-intro h2 em { font-style:normal; color:#d2f48c; }
+.adventure-intro p { font-size:15px; color:#adc5b5; line-height:1.6; max-width:730px; }
+.adventure-sign { min-width:220px; padding:25px; border:5px ridge #c0b292; background:linear-gradient(150deg,#d7c8a8,#7c6650); color:#263c34; box-shadow:7px 10px 0 #0b1b1b; display:flex; flex-direction:column; }
+.adventure-sign span,.adventure-sign small { font:10px "DM Mono",monospace; letter-spacing:.1em; }
+.adventure-sign b { font-size:30px; line-height:1.03; margin:14px 0; letter-spacing:-.06em; }
+.adventure-launch { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr); gap:15px; }
+.adventure-monitor { min-height:455px; aspect-ratio:4/3; position:relative; overflow:hidden; border:12px solid #11191b; box-shadow:0 0 0 2px #4d675d, inset 0 0 45px #000; background:#030909; border-radius:16px; }
+.adventure-monitor iframe { width:100%; height:100%; position:absolute; inset:0; display:block; border:0; z-index:1; background:#030707; }
+.adventure-scan { position:absolute; z-index:2; pointer-events:none; inset:0; background:repeating-linear-gradient(0deg,transparent 0 3px,#0002 3px 4px); opacity:.22; }
+.adventure-idle { height:100%; width:100%; background:radial-gradient(ellipse at center,#20473f,#081916 68%,#010909); color:#d2f48c; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px; padding:30px; }
+.adventure-glyph { font-size:105px; line-height:1; }
+.adventure-idle strong { font-size:clamp(22px,3vw,35px); letter-spacing:-.04em; }
+.adventure-idle small { font:10px "DM Mono",monospace; letter-spacing:.07em; color:#b2d4ac; }
+.adventure-idle p { max-width:400px; color:#a8bcaa; line-height:1.6; font-size:13px; }
+.adventure-console { background:#20312f; border:1px solid #4a6a5a; padding:25px; border-radius:4px; }
+.adventure-console >p { color:#a6c0b1; font-size:12px; line-height:1.6; }
+.adventure-console strong { color:#d4efae; }
+.adventure-main-link,.adventure-alt-link,.adventure-embed { display:block; text-decoration:none; width:100%; text-align:center; padding:14px 8px; margin-top:10px; font:11px "DM Mono",monospace; letter-spacing:.02em; }
+.adventure-main-link { background:#cef487; color:#1e3328; border:1px solid #e0f8a9; font-weight:500; }
+.adventure-alt-link { background:#2b453d; color:#e1f6c4; border:1px solid #78a27c; }
+.adventure-embed { background:#132723; color:#c0deb2; border:1px solid #4f7765; cursor:pointer; }
+.adventure-main-link:hover,.adventure-alt-link:hover,.adventure-embed:hover { filter:brightness(1.12); }
+.adventure-library { margin-top:70px; }
+.adventure-library-intro { margin:20px 0 25px; }
+.adventure-library-intro h3 { font-size:clamp(30px,4vw,50px); margin:0 0 10px; letter-spacing:-.05em; }
+.adventure-library-intro p { max-width:800px; color:#a7c1af; font-size:14px; line-height:1.6; }
+.adventure-library-intro strong { color:#daefb7; }
+.adventure-filters { background:#1a302c; border:1px solid #456757; padding:16px; margin-bottom:14px; }
+.adventure-filters input { width:100%; padding:12px; border:1px solid #5b7b69; border-radius:3px; background:#102823; color:#e5f2dc; font:13px "DM Mono",monospace; }
+.adventure-filters input::placeholder { color:#829c8c; }
+.adventure-filter-buttons { display:flex; flex-wrap:wrap; gap:9px; margin-top:13px; }
+.adventure-filter-buttons button { background:#243b34; color:#abbea9; border:1px solid #466650; padding:10px 14px; font:10px "DM Mono",monospace; }
+.adventure-filter-buttons button[aria-pressed="true"] { background:#d1f38c; color:#1b3228; border-color:#d1f38c; }
+.adventure-game-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.adventure-game { border:1px solid #3d6154; background:#1a302b; padding:18px; }
+.adventure-game-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.adventure-game-head strong { color:#f0f7e3; font-size:16px; }
+.adventure-game-head span { flex:none; border:1px solid #55725d; padding:6px; color:#b9caaf; font:9px "DM Mono",monospace; white-space:nowrap; }
+.adventure-game-head span.freeware { color:#d8efa7; border-color:#82975e; }
+.adventure-game-meta { color:#9ab5a5; font:10px "DM Mono",monospace; margin-top:9px; }
+.adventure-game p { color:#a4c0ad; font-size:12px; margin:9px 0 0; }
+.adventure-empty { padding:18px; color:#a7c3ad; }
+.adventure-bottom { margin-top:20px; padding:24px; border:1px solid #59765d; background:#213a31; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.adventure-bottom strong { color:#d3efa3; font:12px "DM Mono",monospace; }
+.adventure-bottom p { color:#b2c7af; font-size:12px; max-width:650px; line-height:1.5; margin-bottom:0; }
+.adventure-bottom a { flex:none; background:#cbed8c; padding:13px 18px; text-decoration:none; color:#213528; font:11px "DM Mono",monospace; }
+.adventure-credit { color:#9eb6a7; font-size:11px; line-height:1.7; margin-top:21px; }
+.adventure-credit a { color:#c7e89a; }
+@media(max-width:1020px) { .adventure-launch { grid-template-columns:1fr; } .adventure-monitor { aspect-ratio:16/10; } }
+@media(max-width:720px) { .adventure-sign { display:none; } .adventure-intro { padding:12px 0 15px; } .adventure-monitor { min-height:340px; aspect-ratio:5/4; border-width:7px; } .adventure-console { padding:19px; } .adventure-game-list { grid-template-columns:1fr; } .adventure-bottom { flex-direction:column; align-items:flex-start; } .adventure-room{margin-top:42px} }
