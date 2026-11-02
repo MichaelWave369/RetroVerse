@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/prepare-assets.mjs",
+    "predev": "node scripts/prepare-assets.mjs && node scripts/prepare-amiga.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/prepare-assets.mjs",
+    "prebuild": "node scripts/prepare-assets.mjs && node scripts/prepare-amiga.mjs",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"

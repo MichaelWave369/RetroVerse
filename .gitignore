@@ -2,6 +2,7 @@ node_modules/
 dist/
 public/vendor/
 public/media/
+public/amiga/
 .env
 .env.*
 !.env.example

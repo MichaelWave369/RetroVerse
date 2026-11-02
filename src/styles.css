@@ -181,3 +181,25 @@ footer a { text-decoration: none; color: #c4e78e; }
 .classic-footnote b { color: #d4f78d; }
 @media (max-width: 1080px) { .classic-list { grid-template-columns: 1fr; } }
 @media (max-width: 710px) { .classic-headline { align-items: flex-start; flex-direction: column; } .classic-metrics { display: none; } .classic-entry { flex-wrap: wrap; gap: 9px; } .classic-votes { margin-left: auto; } .classic-unavailable { display: none; } .classic-catalog { margin-top: 40px; } }
+
+/* Dedicated SAE emulator room, retaining the upstream GPL GUI in its own frame */
+.amiga-room{margin-top:60px}
+.amiga-intro{display:flex;align-items:center;justify-content:space-between;gap:25px;margin:22px 0 30px}
+.amiga-intro h2{font-size:clamp(42px,6vw,78px);letter-spacing:-.07em;margin:14px 0}
+.amiga-intro h2 em{font-style:normal;color:#d2f58c}
+.amiga-intro p{color:#a6bfb5;font-size:15px;line-height:1.6;max-width:700px}
+.amiga-intro p.amiga-notice{font-size:12px;color:#edc58c}
+.amiga-plate{flex:none;display:flex;flex-direction:column;gap:10px;padding:25px;border:1px solid #b2c9aa;border-radius:9px;background:#bfc8ba;color:#31433c;box-shadow:5px 8px #101a18}
+.amiga-plate b{font-size:38px}.amiga-plate span{font:10px "DM Mono",monospace;letter-spacing:.12em}
+.amiga-shell{padding:14px;background:#1d3430;border:1px solid #577867;border-radius:5px}
+.amiga-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:8px 4px 17px;color:#c9dfba;font:11px "DM Mono",monospace}
+.amiga-toolbar a,.amiga-toolbar button{background:#2e4940;border:1px solid #7a9977;color:#e0f6ba;padding:10px 13px;text-decoration:none;font:11px "DM Mono",monospace}
+.amiga-iframe{display:block;width:100%;height:850px;border:0;background:#0c1112}
+.amiga-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.amiga-steps div{border:1px solid #446454;background:#1b312c;padding:20px}
+.amiga-steps b{color:#daf493;font:11px "DM Mono",monospace}
+.amiga-steps p,.amiga-source{color:#a9bcae;font-size:12px;line-height:1.6}
+.amiga-source{margin-top:20px}
+.amiga-source a{color:#d6f48f}
+@media(max-width:950px){.amiga-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.amiga-intro{flex-direction:column;align-items:flex-start}.amiga-plate{display:none}.amiga-steps{grid-template-columns:1fr}.amiga-iframe{height:750px}.amiga-room{margin-top:40px}}
