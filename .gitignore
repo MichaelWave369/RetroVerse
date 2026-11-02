@@ -1,6 +1,7 @@
 node_modules/
 dist/
 public/vendor/
+public/media/
 .env
 .env.*
 !.env.example

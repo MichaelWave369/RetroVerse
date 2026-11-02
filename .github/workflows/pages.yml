@@ -37,6 +37,7 @@ jobs:
           test -s dist/vendor/v86.wasm
           test -s dist/vendor/seabios.bin
           test -s dist/vendor/vgabios.bin
+          test "$(wc -c < dist/media/freedos722.img)" -eq 737280
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
