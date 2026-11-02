@@ -38,6 +38,12 @@ jobs:
           test -s dist/vendor/seabios.bin
           test -s dist/vendor/vgabios.bin
           test "$(wc -c < dist/media/freedos722.img)" -eq 737280
+          test -s dist/amiga/example.htm
+          test -s dist/amiga/example.js
+          test -s dist/amiga/sae/amiga.js
+          test -s dist/amiga/sae/audio_worklet.js
+          test -s dist/amiga/gpl.htm
+          test -s dist/amiga/SOURCE-PROVENANCE.txt
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
