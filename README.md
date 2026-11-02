@@ -6,7 +6,7 @@ RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://gi
 
 ## Rung 1
 
-- Boot the openly distributable FreeDOS demo disk image, fetched from the official v86 image host.
+- Boot the openly distributable 720 KB FreeDOS demo floppy, fetched from the official v86 image host.
 - Choose MS-DOS 3.30, 5.0, 6.22 or other PC media, then supply your own authorized bootable floppy/hard-disk/CD image. Selecting a version is a label for the user's imported media, not an included Microsoft OS.
 - Change memory size, power on/off, pause/resume, restart, send Ctrl+Alt+Del, insert/eject floppies and CDs, load local media.
 - Save and restore emulator state (requires the same original disk image and emulator build); fullscreen screen and keyboard guidance.
@@ -18,7 +18,7 @@ After the Pages workflow is enabled under **Settings → Pages → Build and dep
 
 **https://michaelwave369.github.io/RetroVerse/**
 
-GitHub Pages is free static hosting; the browser executes the emulator. The first boot fetches the FreeDOS demo from the v86-hosted image server. Your own uploaded images stay in browser memory, not on a RetroVerse server.
+GitHub Pages is free static hosting; the browser executes the emulator. The first boot loads the FreeDOS demo floppy from the v86-hosted image server. Your own uploaded images stay in browser memory, not on a RetroVerse server.
 
 ## Local development
 
