@@ -352,9 +352,9 @@ export default function App() {
         ) : (
           <section className="roadmap-room">
             <span className="eyebrow">THE NEXT PORTAL / UNDER CONSTRUCTION</span>
-            <div className="roadmap-glyph">{station === "amiga" ? "⌘" : "▤"}</div>
-            <h2>{station === "amiga" ? "AMIGA WORKBENCH" : "SCUMM ADVENTURES"}</h2>
-            <p>{station === "amiga" ? "This room will host real Amiga emulation, ADF floppy imports and compatible open firmware." : "This room will launch supported adventure games using ScummVM and user-supplied game data."}</p>
+            <div className="roadmap-glyph">▤</div>
+            <h2>SCUMM ADVENTURES</h2>
+            <p>This room will launch supported adventure games using ScummVM and user-supplied game data.</p>
             <span className="construction-label">NOT PLAYABLE YET. NO FAKE EMULATOR HERE.</span>
             <button className="return-button" type="button" onClick={() => setStation("dos")}>← BACK TO THE DOS COMPUTER</button>
           </section>
