@@ -4,16 +4,18 @@ import { createOptions, profiles } from "./boot";
 import GameCabinet from "./GameCabinet";
 import AmigaRoom from "./AmigaRoom";
 import AdventureRoom from "./AdventureRoom";
+import TandyRoom from "./TandyRoom";
 import type { MediaType, ProfileId } from "./boot";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
-type Station = "dos" | "cabinet" | "amiga" | "adventures";
+type Station = "dos" | "cabinet" | "tandy" | "amiga" | "adventures";
 
 const MAX_LOCAL_MEDIA_BYTES = 256 * 1024 * 1024;
 
 const stations: { id: Station; name: string; tag: string; description: string }[] = [
   { id: "dos", name: "IBM PC / DOS", tag: "PLAYABLE RUNG 01", description: "Boot authentic PC hardware in your browser." },
   { id: "cabinet", name: "DOS GAME CABINET", tag: "PLAYABLE RUNG 02", description: "Run your own DOS game bundles with js-dos." },
+  { id: "tandy", name: "TANDY 1000 SL/2", tag: "TANDY-COMPATIBLE · RUNG 08", description: "Explore Tandy graphics and sound; load your 720 KB DOS floppies." },
   { id: "amiga", name: "AMIGA WORKBENCH", tag: "RUNG 03 · ROM REQUIRED", description: "Real Amiga emulation using your Kickstart and ADF disks." },
   { id: "adventures", name: "SCUMM ADVENTURES", tag: "WEB PORTAL · RUNG 04", description: "Launch the real browser ScummVM demo and explore classic adventures." },
 ];
@@ -233,7 +235,7 @@ export default function App() {
           <div className="eyebrow"><span className="small-square" /> THE LIVING COMPUTER MUSEUM <span className="hero-rule" /> EST. 2026</div>
           <h1>YOUR TICKET<br />TO <em>YESTERDAY.</em></h1>
           <p>Real machines. Real boot sequences. Real memories. Step inside decades of computing history, powered entirely by your browser.</p>
-          <div className="hero-stats"><span><b>04</b> MUSEUM STATIONS</span><span><b>04</b> MUSEUM STATIONS</span><span><b>100%</b> BROWSER-BASED</span></div>
+          <div className="hero-stats"><span><b>05</b> MUSEUM STATIONS</span><span><b>04</b> EMULATOR EXPERIENCES</span><span><b>100%</b> BROWSER-BASED</span></div>
         </section>
 
         <section className="museum" aria-label="Computer stations">
@@ -248,10 +250,10 @@ export default function App() {
                 aria-pressed={station === item.id}
               >
                 <span className="station-number">0{index + 1} / 0{stations.length}</span>
-                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "cabinet" ? "◈" : item.id === "amiga" ? "⌘" : "▤"}</span>
+                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "cabinet" ? "◈" : item.id === "tandy" ? "▥" : item.id === "amiga" ? "⌘" : "▤"}</span>
                 <strong>{item.name}</strong>
                 <span className="station-description">{item.description}</span>
-                <span className={"station-tag" + ((item.id === "dos" || item.id === "cabinet" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
+                <span className={"station-tag" + ((item.id === "dos" || item.id === "cabinet" || item.id === "tandy" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
               </button>
             ))}
           </div>
@@ -348,6 +350,8 @@ export default function App() {
           </section>
         ) : station === "cabinet" ? (
           <GameCabinet />
+        ) : station === "tandy" ? (
+          <TandyRoom onGoToPc={() => chooseStation("dos")} />
         ) : station === "amiga" ? (
           <AmigaRoom />
         ) : (
@@ -356,7 +360,7 @@ export default function App() {
 
         <section className="disclaimer">
           <span className="disclaimer-mark">✳</span>
-          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not contain Microsoft DOS, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Import your own legally usable disk images. Your local files are never sent to a RetroVerse backend. No guest networking is enabled by default.</p></div>
+          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not include Microsoft DOS, Tandy DeskMate ROMs, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Tandy compatibility uses DOSBox rather than original SL/2 firmware. Import only media you are authorized to use; local images stay on your device. No guest networking is enabled by default.</p></div>
         </section>
       </main>
       <footer><span>Φ369 LABS / ENTER THE FIELD</span><span><a href="https://github.com/MichaelWave369/RetroVerse" target="_blank" rel="noreferrer">SOURCE ON GITHUB ↗</a> &nbsp; · &nbsp; OPEN SOURCE · LOCAL FIRST</span></footer>

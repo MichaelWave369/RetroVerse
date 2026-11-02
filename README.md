@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Rungs 1–4: DOS PC, DOS Game Cabinet, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Five museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 

@@ -1,55 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import CommunityCatalog from "./CommunityCatalog";
 import GameVault from "./GameVault";
+import { loadJsDos, type JsDosPlayer } from "./jsdosRuntime";
 import { bundleSaveKey, readChanges, writeChanges, deleteChanges } from "./saveChanges";
 import { exportProgressArchive, importProgressArchive } from "./saveArchive";
 
-const loaderJs = "https://v8.js-dos.com/latest/js-dos.js";
-const loaderCss = "https://v8.js-dos.com/latest/js-dos.css";
-// This URL is the example bundle in the official js-dos integration documentation.
-// Hosted by js-dos. RetroVerse does not mirror or redistribute this game.
+// The arcade and Tandy station share one on-demand js-dos runtime.
 const demoUrl = "https://v8.js-dos.com/bundles/digger.jsdos";
 const MAX_BUNDLE_SIZE = 256 * 1024 * 1024;
-
-interface Player {
-  stop(): Promise<void>;
-  setNoCloud(noCloud: boolean): void;
-  setPaused(paused: boolean): void;
-  setFullScreen(fullscreen: boolean): void;
-  save(): Promise<boolean>;
-}
-declare global {
-  interface Window {
-    Dos?: (element: HTMLDivElement, options: Record<string, unknown>) => Player;
-  }
-}
-let loaderPromise: Promise<void> | null = null;
-
-function loadJsDos(): Promise<void> {
-  if (window.Dos) return Promise.resolve();
-  if (loaderPromise) return loaderPromise;
-  loaderPromise = new Promise<void>((resolve, reject) => {
-    if (!document.querySelector('link[data-retroverse-jsdos]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = loaderCss;
-      link.dataset.retroverseJsdos = "true";
-      document.head.appendChild(link);
-    }
-    const script = document.createElement("script");
-    script.src = loaderJs;
-    script.async = true;
-    script.dataset.retroverseJsdos = "true";
-    script.onload = () => window.Dos ? resolve() : reject(new Error("js-dos loaded without its player API"));
-    script.onerror = () => reject(new Error("js-dos could not load from its official CDN. Check connectivity."));
-    document.head.appendChild(script);
-  }).catch((error) => {
-    loaderPromise = null;
-    document.querySelector('script[data-retroverse-jsdos]')?.remove();
-    throw error;
-  });
-  return loaderPromise;
-}
 
 type CabinetStatus = "idle" | "loading" | "ready" | "playing" | "error";
 
@@ -59,7 +17,7 @@ export default function GameCabinet() {
   const [message, setMessage] = useState("Select an upstream demo or load your own .jsdos bundle.");
   const [paused, setPaused] = useState(false);
   const [source, setSource] = useState("");
-  const playerRef = useRef<Player | null>(null);
+  const playerRef = useRef<JsDosPlayer | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const blobRef = useRef<string | null>(null);
