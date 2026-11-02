@@ -1,4 +1,5 @@
-import { mkdir, copyFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, copyFile, stat, writeFile, readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 
@@ -39,4 +40,38 @@ for (const [name, minSize] of [["seabios.bin", 100000], ["vgabios.bin", 30000]])
   if (bytes.byteLength < minSize) throw new Error("Unexpectedly small firmware file: " + name);
   await writeFile(target, bytes);
   console.log("Downloaded", name, bytes.byteLength, "bytes");
+}
+
+
+// The runtime FreeDOS download previously failed in some browsers.
+// Prepare it on the build runner instead and serve it from our own origin.
+// Pin the exact archived upstream commit AND verify the file's Git blob SHA.
+const sampleDir = join(root, "public", "media");
+const sampleTarget = join(sampleDir, "freedos722.img");
+const sampleUrl = "https://raw.githubusercontent.com/copy/images/db92d8fd4a53dbd73b8e0588bb4bd8fe37a1975a/freedos722.img";
+const sampleSize = 737280;
+const sampleGitBlob = "ec7a4cf9fc9a30adbc83c5b4755c637568a74d9a";
+
+function validSample(bytes) {
+  if (bytes.length !== sampleSize) return false;
+  if (bytes[510] !== 0x55 || bytes[511] !== 0xaa) return false;
+  const computed = createHash("sha1")
+    .update("blob " + bytes.length + "\0")
+    .update(bytes)
+    .digest("hex");
+  return computed === sampleGitBlob;
+}
+
+await mkdir(sampleDir, { recursive: true });
+let cachedSample;
+try { cachedSample = await readFile(sampleTarget); } catch { /* First build or cache miss. */ }
+if (cachedSample && validSample(cachedSample)) {
+  console.log("Using verified FreeDOS floppy", sampleTarget);
+} else {
+  const response = await fetch(sampleUrl, { signal: AbortSignal.timeout(25000) });
+  if (!response.ok) throw new Error("Failed to fetch pinned FreeDOS boot floppy: HTTP " + response.status);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (!validSample(bytes)) throw new Error("FreeDOS image failed 720 KiB boot-sector / pinned Git SHA verification");
+  await writeFile(sampleTarget, bytes);
+  console.log("Prepared verified FreeDOS floppy", bytes.length, "bytes");
 }

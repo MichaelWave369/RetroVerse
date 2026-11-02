@@ -151,3 +151,33 @@ footer a { text-decoration: none; color: #c4e78e; }
 .arcade-status { margin-top: 19px; border-left: 2px solid #d1f58a; background: #10231f; color: #b5ccb9; padding: 12px; min-height: 50px; font: 10px/1.6 "DM Mono",monospace; overflow-wrap: anywhere; }
 @media (max-width: 1000px) { .cabinet-layout { grid-template-columns: 1fr; } }
 @media (max-width: 710px) { .arcade-display { padding: 12px; } .arcade-screen { min-height: 310px; border-width: 6px; } .arcade-panel { padding: 20px; } .cabinet-room { margin-top: 42px; } }
+
+
+/* RetroVerse's non-playable community wishlist. Pure metadata, no copyrighted game art. */
+.classic-catalog { margin-top: 60px; }
+.classic-headline { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 0 25px; }
+.classic-headline h2 { font-size: clamp(36px, 5.5vw, 62px); letter-spacing: -.06em; margin: 14px 0 12px; }
+.classic-headline h2 em { color: #d2f48c; font-style: normal; }
+.classic-headline p { max-width: 760px; line-height: 1.6; font-size: 14px; color: #a8c0b7; margin: 0; }
+.classic-headline p strong { color: #d9eabc; }
+.classic-metrics { flex: none; border: 1px solid #486a55; padding: 19px 25px; display: flex; align-items: center; flex-direction: column; background: #20382f; }
+.classic-metrics b { color: #ddf7a7; font-size: 48px; letter-spacing: -.07em; line-height: 1; }
+.classic-metrics span { font: 9px "DM Mono",monospace; letter-spacing: .08em; margin-top: 5px; color: #a9bdad; }
+.classic-search { width: 100%; padding: 14px 18px; color: #e8f6dc; border: 1px solid #57746c; background: #122423; font: 13px "DM Mono",monospace; margin-bottom: 16px; border-radius: 3px; }
+.classic-search::placeholder { color: #7d9a8c; }
+.classic-search:focus-visible { outline: 2px solid #d3f48c; outline-offset: 2px; }
+.classic-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.classic-entry { min-width: 0; min-height: 70px; display: flex; align-items: center; gap: 12px; padding: 11px 15px; border: 1px solid #3d5e57; background: #1a302f; }
+.classic-rank { color: #d2f28c; font: 14px "DM Mono",monospace; min-width: 28px; }
+.classic-entry strong { font-size: 13px; color: #e4efdf; flex: 1; min-width: 0; }
+.classic-votes, .classic-unavailable { font: 9px "DM Mono",monospace; letter-spacing: .04em; white-space: nowrap; }
+.classic-votes { color: #a5bcad; }
+.classic-unavailable { border: 1px solid #567061; padding: 5px 6px; color: #91a99f; }
+.classic-empty { color: #b3c7b3; font-size: 13px; }
+.classic-expand { background: #253f39; border: 1px solid #789b78; color: #dcf4b1; width: 100%; padding: 15px; margin-top: 13px; font: 12px "DM Mono",monospace; letter-spacing: .08em; }
+.classic-expand:hover { background: #345146; }
+.classic-footnote { margin-top: 22px; padding: 18px; border-left: 2px solid #96b979; background: #18312b; }
+.classic-footnote p { margin: 5px 0 9px; font-size: 11px; color: #afc6b3; line-height: 1.6; }
+.classic-footnote b { color: #d4f78d; }
+@media (max-width: 1080px) { .classic-list { grid-template-columns: 1fr; } }
+@media (max-width: 710px) { .classic-headline { align-items: flex-start; flex-direction: column; } .classic-metrics { display: none; } .classic-entry { flex-wrap: wrap; gap: 9px; } .classic-votes { margin-left: auto; } .classic-unavailable { display: none; } .classic-catalog { margin-top: 40px; } }

@@ -6,7 +6,7 @@ RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://gi
 
 ## Rung 1
 
-- Boot the openly distributable 720 KB FreeDOS demo floppy, fetched from the official v86 image host.
+- Boot the openly distributable 720 KiB FreeDOS demo floppy, fetched **at build time**, validated and served from the same GitHub Pages origin. No runtime request to `i.copy.sh`.
 - Choose MS-DOS 3.30, 5.0, 6.22 or other PC media, then supply your own authorized bootable floppy/hard-disk/CD image. Selecting a version is a label for the user's imported media, not an included Microsoft OS.
 - Change memory size, power on/off, pause/resume, restart, send Ctrl+Alt+Del, insert/eject floppies and CDs, load local media.
 - Save and restore emulator state (requires the same original disk image and emulator build); fullscreen screen and keyboard guidance.
@@ -18,13 +18,17 @@ A separate real DOSBox-based game cabinet is now available through the browser, 
 
 This Rung 2 integration is hosted via js-dos's maintained `latest` CDN rather than packaging GPL code into RetroVerse. That entails an internet dependency and possible upstream API drift, so production testing and a later pinned/self-hosted build are planned. js-dos retains its GPL-2.0 license; our application license does not supersede it.
 
+## Community Classics Wishlist
+
+The DOS Game Cabinet contains a searchable, non-playable wishlist recording **46 entries from a community tally** supplied by the project owner (roughly 994 usable recommendations in the underlying discussion). `Another World / Flashback` was grouped by the original tally; it represents two individual games. The ranking is community-sourced, not an official compatibility or distribution entitlement. No listed commercial game is bundled. Future milestones will add curated links and playable **licensed** shareware demos after individually verifying redistribution rights, plus a user-owned game library. The source metadata is in `src/dosClassics.ts`.
+
 ## Play online
 
 After the Pages workflow is enabled under **Settings → Pages → Build and deployment → GitHub Actions**, the default deployment target is:
 
 **https://michaelwave369.github.io/RetroVerse/**
 
-GitHub Pages is free static hosting; the browser executes the emulator. The first boot loads the FreeDOS demo floppy from the v86-hosted image server. Your own uploaded images stay in browser memory, not on a RetroVerse server.
+GitHub Pages is free static hosting; the browser executes the emulator. The build process downloads a pinned FreeDOS demo floppy from `copy/images`, verifies its Git blob identity and size, and hosts it at `media/freedos722.img` alongside the site. No cross-origin FreeDOS fetch occurs at runtime. Your own uploaded images stay in browser memory, not on a RetroVerse server.
 
 ## Local development
 
@@ -38,7 +42,7 @@ For a production build:
     npm run build
     npm run preview
 
-The \`predev\` and \`prebuild\` scripts copy the official v86 WASM files and download pinned SeaBIOS / VGA BIOS binaries to \`public/vendor\`. Those generated files are gitignored; no binary firmware is checked into this repository.
+The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned SeaBIOS/VGA BIOS into `public/vendor`, and download/verify the FreeDOS floppy into `public/media`. Generated assets are gitignored. CI checks that the built image is exactly 737,280 bytes; image downloads happen during builds, not at user boot.
 
 ## Architecture
 
@@ -50,8 +54,8 @@ The \`predev\` and \`prebuild\` scripts copy the official v86 WASM files and dow
 
 ## Roadmap
 
-1. **DOS PC:** authentic boot, power controls, imported disk images, save states.
-2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports and local saves. Future: controller presets, self-hosted runtime.
+1. **DOS PC:** authentic boot, same-origin FreeDOS floppy, power controls, imported disk images, save states.
+2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports, local saves, and a searchable Community Classics wishlist. Future: verified licensed demos, controller presets, self-hosted runtime.
 3. **Amiga:** browser Amiga emulator, user-provided Kickstart/ADF media and AROS where compatible.
 4. **Adventures:** ScummVM for user-provided compatible adventure-game data.
 5. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.

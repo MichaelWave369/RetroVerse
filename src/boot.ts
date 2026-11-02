@@ -18,8 +18,9 @@ export const profiles: Profile[] = [
   { id: "custom", label: "Other PC boot media", detail: "Boot a compatible floppy, hard disk, or CD image", needsOwnMedia: true },
 ];
 
-// FreeDOS sample is hosted by the v86 project. No copyrighted Microsoft media is bundled.
-export const freeDosSampleUrl = "https://i.copy.sh/freedos722.img";
+// The verified 720 KiB FreeDOS image is part of the static site build.
+// No runtime cross-origin request or commercial DOS media required.
+export const freeDosSamplePath = "media/freedos722.img";
 
 export function mediaFromBuffer(buffer: ArrayBuffer): V86Image {
   return { buffer };
@@ -48,7 +49,7 @@ export function createOptions(params: {
   };
 
   if (profile === "freedos") {
-    options.fda = { url: freeDosSampleUrl };
+    options.fda = { url: baseUrl + freeDosSamplePath };
   } else if (mediaBuffer) {
     options[mediaType === "floppy" ? "fda" : mediaType === "harddisk" ? "hda" : "cdrom"] =
       mediaFromBuffer(mediaBuffer);

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import CommunityCatalog from "./CommunityCatalog";
 
 const loaderJs = "https://v8.js-dos.com/latest/js-dos.js";
 const loaderCss = "https://v8.js-dos.com/latest/js-dos.css";
@@ -217,6 +218,7 @@ export default function GameCabinet() {
           <div className="arcade-status" role="status" aria-live="polite">&gt; {message}</div>
         </aside>
       </div>
+      <CommunityCatalog />
     </section>
   );
 }
