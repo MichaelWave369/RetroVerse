@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Rung 1: DOS PC.**
+A real retro-computer time machine in your browser. **Rungs 1–2: DOS PC + Game Cabinet.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -11,6 +11,12 @@ RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://gi
 - Change memory size, power on/off, pause/resume, restart, send Ctrl+Alt+Del, insert/eject floppies and CDs, load local media.
 - Save and restore emulator state (requires the same original disk image and emulator build); fullscreen screen and keyboard guidance.
 - GitHub Actions builds the React site, checks types and publishes to GitHub Pages when main changes.
+
+## Rung 2: DOS game cabinet
+
+A separate real DOSBox-based game cabinet is now available through the browser, powered by the official [js-dos v8 player](https://js-dos.com/). It can launch the **official upstream Digger example** directly from the js-dos CDN, or a locally chosen `.jsdos` bundle (up to 256 MiB) supplied by the user. The emulator/player assets are fetched on demand from js-dos servers; no bundle is uploaded to our application. Local file-system persistence is supported by js-dos's browser storage. The game cabinet does not ship commercial games.
+
+This Rung 2 integration is hosted via js-dos's maintained `latest` CDN rather than packaging GPL code into RetroVerse. That entails an internet dependency and possible upstream API drift, so production testing and a later pinned/self-hosted build are planned. js-dos retains its GPL-2.0 license; our application license does not supersede it.
 
 ## Play online
 
@@ -45,7 +51,7 @@ The \`predev\` and \`prebuild\` scripts copy the official v86 WASM files and dow
 ## Roadmap
 
 1. **DOS PC:** authentic boot, power controls, imported disk images, save states.
-2. **Game cabinet:** js-dos launcher with legally distributable game demos, controller support and saves.
+2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports and local saves. Future: controller presets, self-hosted runtime.
 3. **Amiga:** browser Amiga emulator, user-provided Kickstart/ADF media and AROS where compatible.
 4. **Adventures:** ScummVM for user-provided compatible adventure-game data.
 5. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
