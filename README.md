@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Rungs 1–2: DOS PC + Game Cabinet.**
+A real retro-computer time machine in your browser. **Rungs 1–4: DOS PC, DOS Game Cabinet, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -23,6 +23,14 @@ This Rung 2 integration is hosted via js-dos's maintained `latest` CDN rather th
 The Amiga station embeds the real [Scripted Amiga Emulator](https://github.com/naTmeg/ScriptedAmigaEmulator) (SAE) in a dedicated same-origin frame. The first implementation preserves its original control panel: choose a machine (A500, A1200 and more), supply your own **authorized** Kickstart ROM and ADF floppy images, then press Start in SAE. It provides pause, reset, mute and fullscreen options. The separate full-page link avoids awkward nested focus issues.
 
 SAE is **GPL-2.0-or-later**. Build-time preparation downloads its original source and example UI pinned to upstream commit `8ebce7b8beb9ebe243e5ea7b5150b3f16f665303`; the complete JavaScript sources and GPL license are published within `/amiga/`. RetroVerse's surrounding React code is MIT-licensed; the embedded upstream SAE application retains GPL terms. No commercial Kickstart ROM, Workbench image or game is bundled. **You cannot boot without appropriate firmware.** Full browser compatibility must be manually verified after deploying.
+
+## Rung 4: ScummVM adventure wing (external web demo)
+
+The fourth station is a **real ScummVM WebAssembly player portal**, connected to the independent third-party project [chkuendig/scummvm-demo](https://github.com/chkuendig/scummvm-demo). The primary button opens its live player in a separate tab, where users can try the demos/freeware titles available on that service. An optional iframe view is provided for convenience but may fail if the external provider blocks framing or browsers restrict cross-origin functionality. The reliable default is the direct link, not a claim that ScummVM has been compiled and self-hosted by RetroVerse.
+
+The room also includes a searchable reference index with **official freeware releases** identified on [ScummVM's own game downloads page](https://www.scummvm.org/games/) and selected classic commercial adventures labeled *bring your own game data*. Catalog cards do not individually launch a game, promise browser compatibility, or imply game data is included.
+
+**Privacy:** clicking the external launch or enabling the iframe contacts the third-party demo provider. Game imports, cloud connections, and saves are handled by that service and its policies. No ScummVM binaries, ROMs or adventure data are downloaded or bundled by the RetroVerse build. ScummVM and its upstream demo retain their independent licenses. Future milestones may add a pinned self-hosted ScummVM WebAssembly build and native library management, after rights and technical review.
 
 ## Community Classics Wishlist
 
@@ -63,7 +71,7 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 1. **DOS PC:** authentic boot, same-origin FreeDOS floppy, power controls, imported disk images, save states.
 2. **Game cabinet:** js-dos launcher with official upstream demo, .jsdos imports, local saves, and a searchable Community Classics wishlist. Future: verified licensed demos, controller presets, self-hosted runtime.
 3. **Amiga:** real SAE engine, selectable Amiga hardware, user-provided Kickstart/ADF media; future native controls and compatibility testing.
-4. **Adventures:** ScummVM for user-provided compatible adventure-game data.
+4. **Adventures:** external ScummVM WebAssembly demo launch, optional browser embedding and searchable freeware/owned-game index. Future: self-hosted build and native game library.
 5. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
