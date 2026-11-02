@@ -139,7 +139,7 @@ export async function importVaultBackup(
   let imported = 0;
   try {
     const entries = await reader.getEntries();
-    if (entries.length < 2 || entries.length > MAX_GAME_COUNT + 1) {
+    if (entries.length > MAX_GAME_COUNT + 1) {
       throw new Error("Unexpected number of files in this backup.");
     }
     const manifestEntry = entries.find(entry => entry.filename === MANIFEST);
