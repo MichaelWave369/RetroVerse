@@ -76,6 +76,7 @@ export default function App() {
   }
 
   async function start() {
+    if (machine.current && status === "error") await shutdown();
     if (!screen.current) return;
     if (selectedProfile.needsOwnMedia && !bootFile) {
       setStatus("error");
