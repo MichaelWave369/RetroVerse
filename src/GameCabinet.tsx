@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import CommunityCatalog from "./CommunityCatalog";
+import GameVault from "./GameVault";
 
 const loaderJs = "https://v8.js-dos.com/latest/js-dos.js";
 const loaderCss = "https://v8.js-dos.com/latest/js-dos.css";
@@ -83,13 +84,13 @@ export default function GameCabinet() {
     if (blobRef.current) URL.revokeObjectURL(blobRef.current);
   }, []);
 
-  async function start(kind: "demo" | "file") {
-    if (kind === "file" && !file) {
+  async function start(kind: "demo" | "file", chosenFile: File | null = file) {
+    if (kind === "file" && !chosenFile) {
       setStatus("error");
       setMessage("Choose a .jsdos game bundle to launch.");
       return;
     }
-    if (kind === "file" && file && file.size > MAX_BUNDLE_SIZE) {
+    if (kind === "file" && chosenFile && chosenFile.size > MAX_BUNDLE_SIZE) {
       setStatus("error");
       setMessage("Bundle exceeds the 256 MiB limit for this first game cabinet.");
       return;
@@ -103,9 +104,9 @@ export default function GameCabinet() {
     try {
       await loadJsDos();
       if (id !== generation.current || !divRef.current || !window.Dos) return;
-      const bundleUrl = kind === "demo" ? demoUrl : URL.createObjectURL(file!);
+      const bundleUrl = kind === "demo" ? demoUrl : URL.createObjectURL(chosenFile!);
       if (kind === "file") blobRef.current = bundleUrl;
-      const label = kind === "demo" ? "Digger (upstream demonstration)" : file!.name;
+      const label = kind === "demo" ? "Digger (upstream demonstration)" : chosenFile!.name;
       setSource(label);
       // External emulator assets are from the js-dos CDN, not from our repo.
       const player = window.Dos(divRef.current, {
@@ -218,6 +219,7 @@ export default function GameCabinet() {
           <div className="arcade-status" role="status" aria-live="polite">&gt; {message}</div>
         </aside>
       </div>
+      <GameVault selectedFile={file} onPlay={(saved) => { setFile(saved); void start("file", saved); }} />
       <CommunityCatalog />
     </section>
   );
