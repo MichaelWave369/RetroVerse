@@ -122,3 +122,32 @@ footer a { text-decoration: none; color: #c4e78e; }
 @media (max-width: 1000px) { .lab-layout { grid-template-columns: 1fr; } .desktop { padding: 30px; } .control-panel { max-width: none; } }
 @media (max-width: 710px) { .screen-container .v86-text { font: 7px/7px monospace; } .topbar { height: 73px; padding: 0 5%; } .brand-symbol { font-size: 38px; } .brand b { font-size: 22px; } .topbar-right { display: none; } .hero { padding: 50px 0; } .hero h1 { font-size: clamp(48px, 12.7vw, 80px); } .hero p { font-size: 15px; } .stations { grid-template-columns: 1fr; } .station { min-height: 125px; padding: 18px; } .station-icon { display: none; } .station-tag { padding-top: 10px; } .section-note { display: none; } .lab { margin-top: 42px; } .desktop { padding: 18px 11px; } .monitor-housing { padding: 10px 10px 4px; border-radius: 14px; } .crt-bezel { border-width: 5px; padding: 3px; border-radius: 10px; } .crt-screen { border-radius: 6px; } .monitor-label, .monitor-maker { font-size: 7px; } .keyboard-shape { height: 65px; } .computer-hint { font-size: 8px; } .control-panel { padding: 20px; } .disclaimer { margin-top: 35px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; } }
+
+
+/* Rung 2: a real js-dos game cabinet, with no simulated emulator output. */
+.cabinet-room { margin-top: 60px; }
+.cabinet-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(305px, 1fr); gap: 18px; }
+.arcade-display { min-width: 0; background: radial-gradient(circle at 50% 45%, #244744, #101f24 78%); border: 1px solid #416b59; padding: 24px; border-radius: 6px; }
+.arcade-top { display: flex; justify-content: space-between; align-items: center; font: 11px "DM Mono",monospace; letter-spacing: .1em; color: #d1f68b; margin-bottom: 18px; gap: 8px; }
+.arcade-screen { min-height: 440px; position: relative; border: 11px solid #080f13; border-radius: 17px; background: #030909; box-shadow: inset 0 0 25px #000; overflow: hidden; }
+.arcade-screen .game-player { position: absolute; inset: 0; width: 100%; height: 100%; }
+.arcade-screen .game-player > div { width: 100%; height: 100%; }
+.arcade-idle { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 30px; gap: 14px; background: radial-gradient(circle at 50% 50%, #184040, #061012); pointer-events: none; }
+.arcade-idle-symbol { color: #d3f987; font-size: 85px; line-height: 1; }
+.arcade-idle h3 { color: #e7f9d7; font-size: clamp(23px, 4vw, 36px); letter-spacing: -.06em; margin: 0; }
+.arcade-idle p { color: #94bcb1; max-width: 340px; font-size: 13px; line-height: 1.5; margin: 0; }
+.arcade-idle small { color: #c7e994; font: 10px "DM Mono",monospace; letter-spacing: .08em; }
+.arcade-footer { display: flex; gap: 11px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 18px; color: #93b3a5; font: 10px "DM Mono",monospace; }
+.arcade-button { border: 1px solid #79a17b; background: #1e3835; color: #d8efb2; padding: 10px 13px; font: 10px "DM Mono",monospace; }
+.arcade-button:disabled { opacity: .45; }
+.arcade-panel { border: 1px solid #365650; background: #1c2c2e; padding: 26px; min-width: 0; border-radius: 5px; }
+.arcade-panel h3 { font-size: 25px; margin: 0 0 13px; }
+.arcade-panel p { color: #9eb7ac; font-size: 13px; line-height: 1.55; }
+.arcade-panel .arcade-file-label { border: 1px dashed #769b72; padding: 15px; display: block; margin: 16px 0; color: #d2f48c; font: 11px "DM Mono",monospace; line-height: 1.6; overflow-wrap: anywhere; }
+.arcade-panel .arcade-file-label strong { display: block; margin-top: 5px; color: #aac4b1; font-weight: normal; }
+.arcade-info { border-top: 1px solid #3c5850; margin-top: 27px; padding-top: 20px; }
+.arcade-info h4 { margin: 0; color: #d4edaa; letter-spacing: .08em; font-size: 11px; font-family: "DM Mono",monospace; }
+.arcade-info a { color: #d2f68b; }
+.arcade-status { margin-top: 19px; border-left: 2px solid #d1f58a; background: #10231f; color: #b5ccb9; padding: 12px; min-height: 50px; font: 10px/1.6 "DM Mono",monospace; overflow-wrap: anywhere; }
+@media (max-width: 1000px) { .cabinet-layout { grid-template-columns: 1fr; } }
+@media (max-width: 710px) { .arcade-display { padding: 12px; } .arcade-screen { min-height: 310px; border-width: 6px; } .arcade-panel { padding: 20px; } .cabinet-room { margin-top: 42px; } }

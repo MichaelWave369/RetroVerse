@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import type { V86 } from "v86";
 import { createOptions, profiles } from "./boot";
+import GameCabinet from "./GameCabinet";
 import type { MediaType, ProfileId } from "./boot";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
-type Station = "dos" | "amiga" | "adventures";
+type Station = "dos" | "cabinet" | "amiga" | "adventures";
 
 const MAX_LOCAL_MEDIA_BYTES = 256 * 1024 * 1024;
 
 const stations: { id: Station; name: string; tag: string; description: string }[] = [
   { id: "dos", name: "IBM PC / DOS", tag: "PLAYABLE RUNG 01", description: "Boot authentic PC hardware in your browser." },
+  { id: "cabinet", name: "DOS GAME CABINET", tag: "PLAYABLE RUNG 02", description: "Run your own DOS game bundles with js-dos." },
   { id: "amiga", name: "AMIGA WORKBENCH", tag: "COMING NEXT", description: "ADF disks, Kickstart, Workbench and demos." },
   { id: "adventures", name: "SCUMM ADVENTURES", tag: "ON THE ROADMAP", description: "Point-and-click stories with ScummVM." },
 ];
@@ -229,7 +231,7 @@ export default function App() {
           <div className="eyebrow"><span className="small-square" /> THE LIVING COMPUTER MUSEUM <span className="hero-rule" /> EST. 2026</div>
           <h1>YOUR TICKET<br />TO <em>YESTERDAY.</em></h1>
           <p>Real machines. Real boot sequences. Real memories. Step inside decades of computing history, powered entirely by your browser.</p>
-          <div className="hero-stats"><span><b>01</b> ACTIVE MACHINE</span><span><b>03</b> PLANNED STATIONS</span><span><b>100%</b> BROWSER-BASED</span></div>
+          <div className="hero-stats"><span><b>02</b> LIVE EXPERIENCES</span><span><b>04</b> MUSEUM STATIONS</span><span><b>100%</b> BROWSER-BASED</span></div>
         </section>
 
         <section className="museum" aria-label="Computer stations">
@@ -244,10 +246,10 @@ export default function App() {
                 aria-pressed={station === item.id}
               >
                 <span className="station-number">0{index + 1} / 0{stations.length}</span>
-                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "amiga" ? "⌘" : "▤"}</span>
+                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "cabinet" ? "◈" : item.id === "amiga" ? "⌘" : "▤"}</span>
                 <strong>{item.name}</strong>
                 <span className="station-description">{item.description}</span>
-                <span className={"station-tag" + (item.id === "dos" ? " ready" : "")}>{item.tag}</span>
+                <span className={"station-tag" + ((item.id === "dos" || item.id === "cabinet") ? " ready" : "")}>{item.tag}</span>
               </button>
             ))}
           </div>
@@ -342,6 +344,8 @@ export default function App() {
               </aside>
             </div>
           </section>
+        ) : station === "cabinet" ? (
+          <GameCabinet />
         ) : (
           <section className="roadmap-room">
             <span className="eyebrow">THE NEXT PORTAL / UNDER CONSTRUCTION</span>
