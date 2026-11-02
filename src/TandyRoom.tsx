@@ -199,7 +199,7 @@ export default function TandyRoom({ onGoToPc }: { onGoToPc: () => void }) {
         <div className="section-head"><span>03 / ORIGINAL SL/2 DISK ARCHIVE</span><span className="section-note">REFERENCE COLLECTION · NO COPYRIGHTED DISKS BUNDLED</span></div>
         <div className="tandy-archive-intro">
           <div><h3>THE ORIGINAL FOUR FLOPPIES.</h3>
-            <p>A community-preserved collection at Internet Archive lists the MS-DOS 3.3 disk and the three DeskMate disks for the Tandy 1000 SL/2. These are **external reference links**, not included downloads or a license grant. The uploader's “Public Domain” tag does not itself prove rights to proprietary Microsoft/Tandy software.</p>
+            <p>A community-preserved collection at Internet Archive lists the MS-DOS 3.3 disk and the three DeskMate disks for the Tandy 1000 SL/2. These are external reference links, not included downloads or a license grant. The uploader's “Public Domain” tag does not itself prove rights to proprietary Microsoft/Tandy software.</p>
           </div>
           <a href={archiveUrl} target="_blank" rel="noopener noreferrer">VIEW ARCHIVE ↗</a>
         </div>

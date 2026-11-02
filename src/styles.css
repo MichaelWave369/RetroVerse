@@ -313,3 +313,56 @@ footer a { text-decoration: none; color: #c4e78e; }
 /* Rung 7 portable game progress controls fit the Rung 2 arcade control panel */
 .arcade-panel .action-grid .form-label{margin:0}
 .arcade-panel .action-grid button:disabled{cursor:not-allowed}
+
+
+/* Rung 8: authentic-inspired Tandy 1000 SL family room. Emulator is DOSBox. */
+.tandy-room{margin-top:62px}
+.tandy-head{display:flex;align-items:center;justify-content:space-between;gap:34px;padding:22px 0 34px}
+.tandy-head h2{font-size:clamp(38px,6.5vw,82px);letter-spacing:-.065em;margin:15px 0}
+.tandy-head h2 em{font-style:normal;color:#d3f18d}
+.tandy-head p{font-size:14px;line-height:1.65;color:#b5c9b8;max-width:750px}
+.tandy-head .tandy-caveat{font-size:12px;color:#e0c894;border-left:2px solid #b99f69;padding-left:14px}
+.tandy-plate{flex:none;min-width:205px;display:flex;flex-direction:column;gap:8px;padding:28px;border:1px solid #c0c9ad;border-radius:5px;background:linear-gradient(150deg,#ddd9c7,#babda9);color:#3b423d;box-shadow:5px 7px 0 #101a16}
+.tandy-plate small,.tandy-plate span{font:10px "DM Mono",monospace;letter-spacing:.12em}
+.tandy-plate b{font-size:37px;line-height:.95;letter-spacing:-.065em}
+.tandy-plate strong{font-size:22px;letter-spacing:-.05em}
+.tandy-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:16px}
+.tandy-screen-outer{min-width:0;padding:22px;border:1px solid #64786b;background:#c4c6b5;color:#25352e;border-radius:10px;box-shadow:5px 7px 0 #0c1b16}
+.tandy-monitor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 13px;font:11px "DM Mono",monospace;color:#33463e}
+.tandy-screen{aspect-ratio:4/3;min-height:340px;position:relative;overflow:hidden;background:#081211;border:10px solid #303937;border-radius:16px;box-shadow:inset 0 0 35px #050807}
+.tandy-player{position:absolute;inset:0;width:100%;height:100%}
+.tandy-player>div{width:100%;height:100%}
+.tandy-splash{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:13px;text-align:center;pointer-events:none;background:radial-gradient(circle at center,#1b4237,#071811 72%);color:#d8f2a1}
+.tandy-splash>span{font-size:85px;line-height:1}
+.tandy-splash strong{font-size:clamp(18px,2.5vw,30px);letter-spacing:-.04em}
+.tandy-splash small{font:10px "DM Mono",monospace;color:#afc19e}
+.tandy-monitor-foot{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:19px;flex-wrap:wrap}
+.tandy-monitor-foot>span{font:9px "DM Mono",monospace;color:#4c6355}
+.tandy-monitor-foot>div{display:flex;flex-wrap:wrap;gap:8px}
+.tandy-monitor-foot button{padding:9px 12px;border:1px solid #69736a;background:#e5e7d3;color:#29382e;font:10px "DM Mono",monospace}
+.tandy-monitor-foot button:disabled{opacity:.45}
+.tandy-console{background:#203330;border:1px solid #54725d;padding:25px;min-width:0}
+.tandy-console select{width:100%;background:#122d27;border:1px solid #51735e;color:#dfeacd;padding:12px;margin:6px 0 8px}
+.tandy-console select:disabled{opacity:.6}
+.tandy-console .form-label{display:block;margin-top:15px}
+.tandy-console .file-button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.tandy-console .setting-hint{line-height:1.6}
+.tandy-loaded{padding:12px;margin:10px 0;border:1px solid #638365;background:#1a3d34}
+.tandy-loaded strong{display:block;color:#e4f2c7;overflow-wrap:anywhere;font-size:12px}
+.tandy-loaded small{display:block;color:#a6c3ae;font-size:10px;margin-top:8px}
+.tandy-loaded .form-label{margin-top:15px}
+.tandy-archive{margin-top:64px}
+.tandy-archive-intro{display:flex;align-items:center;justify-content:space-between;gap:28px;margin:22px 0}
+.tandy-archive-intro h3{font-size:clamp(25px,4vw,47px);margin:0 0 12px;letter-spacing:-.045em}
+.tandy-archive-intro p,.tandy-archive-note{font-size:13px;line-height:1.7;color:#abc4af;max-width:880px}
+.tandy-archive-intro>a,.tandy-dos-link{display:inline-block;flex:none;text-decoration:none;color:#1c2b24;background:#cef18e;border:1px solid #e1f5b4;padding:14px 20px;font:11px "DM Mono",monospace}
+.tandy-floppies{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tandy-floppy{min-width:0;display:flex;gap:18px;align-items:center;border:1px solid #496d54;background:#20392f;padding:18px}
+.tandy-floppy-art{flex:none;width:74px;height:77px;display:flex;align-items:flex-end;justify-content:center;border:4px solid #d6d5c9;background:linear-gradient(#293e42 42%,#d1d2c4 42%);border-radius:4px 4px 8px 8px;box-shadow:3px 4px 0 #101b16}
+.tandy-floppy-art i{width:46px;height:25px;border:2px solid #666f66;background:#d1dfb2;margin-bottom:3px}
+.tandy-floppy strong{display:block;font-size:13px;color:#dff3ce;overflow-wrap:anywhere;margin:5px 0}
+.tandy-floppy small,.tandy-floppy div>span{font:10px "DM Mono",monospace;color:#a6bdaa}
+.tandy-archive-note{max-width:none;margin:22px 0}
+.tandy-dos-link{cursor:pointer}
+@media(max-width:1050px){.tandy-layout{grid-template-columns:1fr}.tandy-screen{min-height:320px}.tandy-archive-intro{align-items:flex-start;flex-direction:column}}
+@media(max-width:700px){.tandy-head{flex-direction:column;align-items:flex-start}.tandy-plate{display:none}.tandy-screen-outer{padding:12px}.tandy-screen{min-height:260px;border-width:6px}.tandy-floppies{grid-template-columns:1fr}.tandy-floppy{padding:13px}.tandy-room{margin-top:42px}}
