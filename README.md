@@ -40,6 +40,14 @@ To run archive compatibility checks locally:
 
 `npm test`
 
+## Rung 7: Portable DOS save progress (owned games)
+
+The DOS Game Cabinet uses [js-dos v8 custom file-system save hooks](https://js-dos.com/save-load-game-progress.html) for *user-provided .jsdos bundles*. When launching one, RetroVerse computes its SHA-256 digest and uses a stable key rather than the temporary Blob URL. File-system deltas are stored in a separate browser-local IndexedDB database. Identical .jsdos files retain the same save identity across browser sessions and game-shelf backup restores.
+
+To export your own game progress, first save **inside the game**, click the cabinet **SAVE** control to persist the changed files, then choose **EXPORT PROGRESS**. This downloads a standalone versioned RetroVerse ZIP with a checksum-verified file-system-change bundle (not an emulator snapshot). To restore, select the same owned .jsdos game, choose **RESTORE PROGRESS**, and import the ZIP. The app checks archive integrity and the matching SHA-256 bundle identity, asks permission before replacing stored changes, and stops a running player **before** writing a replacement. Start the exact same game again to load the imported files.
+
+**Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
+
 ## Rung 3: classic Amiga
 
 The Amiga station embeds the real [Scripted Amiga Emulator](https://github.com/naTmeg/ScriptedAmigaEmulator) (SAE) in a dedicated same-origin frame. The first implementation preserves its original control panel: choose a machine (A500, A1200 and more), supply your own **authorized** Kickstart ROM and ADF floppy images, then press Start in SAE. It provides pause, reset, mute and fullscreen options. The separate full-page link avoids awkward nested focus issues.
@@ -96,7 +104,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 4. **Adventures:** external ScummVM WebAssembly demo launch, optional browser embedding and searchable freeware/owned-game index. Future: self-hosted build and native game library.
 5. **Local Game Vault:** IndexedDB-backed DOS game shelf with play, export and remove; ScummVM self-hosting plan.
 6. **Portable backups:** verified ZIP export/import of owned .jsdos game collections with format tests. Future: full save-game portability.
-7. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+7. **Save progress:** SHA-256-bound DOS file-system deltas with independent verified ZIP export/import. Future: backward-compatible save migrations and quick-state support.
+8. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 
