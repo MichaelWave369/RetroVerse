@@ -5,6 +5,7 @@ import { museumExhibit, museumWalkOrder, stepMuseum, type MuseumStationId } from
 
 interface Props {
   activeStation: MuseumStationId;
+  liveGuest: MuseumStationId | null;
   visited: readonly MuseumStationId[];
   onEnter: (id: MuseumStationId) => boolean;
   onClose: () => void;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 /** CSS perspective gallery; actual emulators stay in their original stations. */
-export default function MuseumWalk({ activeStation, visited, onEnter, onClose, onResetVisits }: Props) {
+export default function MuseumWalk({ activeStation, liveGuest, visited, onEnter, onClose, onResetVisits }: Props) {
   const [selected, setSelected] = useState<MuseumStationId>(activeStation);
   const dialog = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -79,7 +80,7 @@ export default function MuseumWalk({ activeStation, visited, onEnter, onClose, o
           </div>
           <div className="timehall-header-actions">
             <span>{visitedSet.size} / {museumWalkOrder.length} EXHIBITS VISITED</span>
-            <QuestMuseumButton selected={selected} onEnter={onEnter} compact />
+            <QuestMuseumButton selected={selected} activeGuest={liveGuest} onEnter={onEnter} compact />
             <button className="timehall-close" type="button" ref={closeButton} onClick={onClose}
               aria-label="Close Time Hall and return to the computer">✕ CLOSE</button>
           </div>

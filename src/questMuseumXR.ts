@@ -1,4 +1,6 @@
 import { museumExhibit, museumWalkOrder, type MuseumStationId } from "./museumCollection";
+import { CRT_CAPTURE_WIDTH, CRT_CAPTURE_HEIGHT, CRT_REFRESH_MS, paintLocalCRT, isLocalGuestStation } from "./questCRT";
+import { questSelectAction } from "./questInteraction";
 import {
   boxModel, hallShift, multiplyMat4, planeModel,
   QUEST_EXHIBIT_SPACING, questExhibitAt, questIndexOf,
@@ -7,11 +9,11 @@ import {
 
 /**
  * Small native WebXR renderer. No CDN, outside 3D engine or proprietary media.
- * On Quest Browser, each exhibit is a native stereo WebGL2 scene with a signed
- * computer display. Select exits immersive VR and opens the existing 2D room.
+ * On Quest Browser, each exhibit uses native stereo WebGL2. Triggers first
+ * inspect in VR and only a second trigger opens the existing 2D room.
  *
- * The emulators themselves are NOT streamed into XR and multiplayer is NOT
- * implemented. This deliberately avoids misleading fake VR computers.
+ * An already-running local v86 DOS/Win9x canvas may be shown read-only.
+ * Cross-origin emulator frames and multiplayer remain out of scope.
  */
 type XRReference = object;
 type XRView = {
@@ -188,7 +190,7 @@ function makeLabelTexture(gl: WebGL2RenderingContext, i: number): WebGLTexture {
   ctx.fillStyle = "#d8f1be";
   ctx.font = "bold 26px monospace";
   ctx.fillText("LEFT STICK: NEXT / PREVIOUS ROOM",45,417,930);
-  ctx.fillText("TRIGGER: EXIT VR AND OPEN THIS COMPUTER",45,462,930);
+  ctx.fillText("TRIGGER: INSPECT · AGAIN: OPEN 2D COMPUTER",45,462,930);
 
   const texture = gl.createTexture();
   if (!texture) throw new Error("Could not allocate museum exhibit texture.");
@@ -212,6 +214,7 @@ export async function startQuestMuseumXR(
   onEnter: (id: MuseumStationId) => void,
   onStatus: (status: string) => void,
   onEnd: () => void,
+  activeGuest: MuseumStationId | null = null,
 ): Promise<QuestXRController> {
   const xr = system();
   if (!xr || !window.isSecureContext) throw new Error("Immersive WebXR requires a supported HTTPS headset browser.");
@@ -229,6 +232,10 @@ export async function startQuestMuseumXR(
   let cubeVbo: WebGLBuffer | null = null;
   let quadVbo: WebGLBuffer | null = null;
   const textures: WebGLTexture[] = [];
+  let liveTexture: WebGLTexture | null = null;
+  let liveCanvas: HTMLCanvasElement | null = null;
+  let liveReady = false;
+  let lastLiveRefresh = -Infinity;
 
   let selectedIndex = questIndexOf(initial);
   let targetZ = questPositionForIndex(selectedIndex);
@@ -236,9 +243,20 @@ export async function startQuestMuseumXR(
   let lastTick = 0;
   let lastStickChange = -10000;
   let localFloor = true;
+  let inspectionIndex: number | null = null;
+  let inspectedAt = -Infinity;
 
   const onSelect = () => {
     if (ended || entering) return;
+    const now = performance.now();
+    const action = questSelectAction(inspectionIndex, selectedIndex, now - inspectedAt);
+    if (action === "inspect") {
+      inspectionIndex = selectedIndex;
+      inspectedAt = now;
+      onStatus("Inspecting " + questExhibitLabel(selectedIndex) +
+        " · Press trigger AGAIN within 10 seconds to exit VR and open its browser station.");
+      return;
+    }
     entering = true;
     const destination = questExhibitAt(selectedIndex);
     onStatus("Leaving VR to open " + questExhibitLabel(selectedIndex) + "...");
@@ -252,6 +270,7 @@ export async function startQuestMuseumXR(
     session.removeEventListener("end", onSessionEnd);
     if (gl) {
       for (const texture of textures) gl.deleteTexture(texture);
+      if (liveTexture) gl.deleteTexture(liveTexture);
       if (cubeVbo) gl.deleteBuffer(cubeVbo);
       if (quadVbo) gl.deleteBuffer(quadVbo);
       if (colorProgram) gl.deleteProgram(colorProgram.program);
@@ -304,6 +323,19 @@ export async function startQuestMuseumXR(
       -.5,-.5,0,0,0, .5,.5,0,1,1, -.5,.5,0,0,1,
     ]),renderer.STATIC_DRAW);
     for (let i=0;i<museumWalkOrder.length;i++) textures.push(makeLabelTexture(renderer,i));
+    if (isLocalGuestStation(activeGuest)) {
+      liveCanvas = document.createElement("canvas");
+      liveCanvas.width = CRT_CAPTURE_WIDTH;
+      liveCanvas.height = CRT_CAPTURE_HEIGHT;
+      liveTexture = renderer.createTexture();
+      if (!liveTexture) throw new Error("Unable to allocate local CRT preview texture.");
+      renderer.bindTexture(renderer.TEXTURE_2D,liveTexture);
+      renderer.texParameteri(renderer.TEXTURE_2D,renderer.TEXTURE_MIN_FILTER,renderer.LINEAR);
+      renderer.texParameteri(renderer.TEXTURE_2D,renderer.TEXTURE_MAG_FILTER,renderer.LINEAR);
+      renderer.texParameteri(renderer.TEXTURE_2D,renderer.TEXTURE_WRAP_S,renderer.CLAMP_TO_EDGE);
+      renderer.texParameteri(renderer.TEXTURE_2D,renderer.TEXTURE_WRAP_T,renderer.CLAMP_TO_EDGE);
+      renderer.texImage2D(renderer.TEXTURE_2D,0,renderer.RGBA,CRT_CAPTURE_WIDTH,CRT_CAPTURE_HEIGHT,0,renderer.RGBA,renderer.UNSIGNED_BYTE,null);
+    }
     renderer.enable(renderer.DEPTH_TEST);
     renderer.depthFunc(renderer.LEQUAL);
     renderer.disable(renderer.CULL_FACE);
@@ -322,7 +354,7 @@ export async function startQuestMuseumXR(
       renderer.uniform3fv(cp.color,hexRGB(hex));
       renderer.drawArrays(renderer.TRIANGLES,0,36);
     }
-    function drawPlaque(vp: Float32Array,index:number,x:number,y:number,z:number,w:number,h:number) {
+    function drawPlaque(vp: Float32Array,index:number,x:number,y:number,z:number,w:number,h:number,overrideTexture?:WebGLTexture) {
       renderer.useProgram(tp.program);
       renderer.bindBuffer(renderer.ARRAY_BUFFER,qv);
       renderer.enableVertexAttribArray(tp.position);
@@ -332,7 +364,8 @@ export async function startQuestMuseumXR(
       renderer.uniformMatrix4fv(tp.vp,false,vp);
       renderer.uniformMatrix4fv(tp.model,false,planeModel(x,y,z,w,h));
       renderer.activeTexture(renderer.TEXTURE0);
-      renderer.bindTexture(renderer.TEXTURE_2D,textures[index]);
+      renderer.bindTexture(renderer.TEXTURE_2D,
+        overrideTexture ?? textures[index]);
       renderer.uniform1i(tp.sampler,0);
       renderer.drawArrays(renderer.TRIANGLES,0,6);
     }
@@ -341,7 +374,8 @@ export async function startQuestMuseumXR(
       drawBox(vp,0,3.65,-22,7,.12,52,"#1a2f33"); // ceiling
       drawBox(vp,-3.6,1.7,-22,.18,3.6,52,"#1b3233");
       drawBox(vp,3.6,1.7,-22,.18,3.6,52,"#1b3233");
-      for (let i=0;i<museumWalkOrder.length;i++) {
+      // Limit geometry to nearby exhibits for Quest mobile GPU efficiency.
+      for (let i=Math.max(0,selectedIndex-2);i<=Math.min(museumWalkOrder.length-1,selectedIndex+2);i++) {
         const z = -3.45 - QUEST_EXHIBIT_SPACING * i;
         const selected = i === selectedIndex;
         const exhibit = museumExhibit(questExhibitAt(i));
@@ -354,6 +388,16 @@ export async function startQuestMuseumXR(
         drawBox(vp,0,.40,z-.12,2.35,.8,1.12,selected?"#3e6751":"#2e4844");
         drawBox(vp,0,1.55,z-.18,2.98,1.52,.15,selected?accent:"#6f8e79");
         drawPlaque(vp,i,0,1.57,z-.07,2.78,1.31);
+        if (i === selectedIndex && liveReady && liveTexture && activeGuest === questExhibitAt(i)) {
+          drawBox(vp,2.05,1.60,z-.10,1.70,1.24,.12,"#b8cf9f");
+          drawPlaque(vp,i,2.05,1.60,z-.018,1.58,1.11,liveTexture);
+        }
+      }
+      if (inspectionIndex === selectedIndex) {
+        // A closer, larger readable plaque: trigger again to open the 2D station.
+        const inspectZ = -1.98 - QUEST_EXHIBIT_SPACING * selectedIndex;
+        drawBox(vp,0,1.55,inspectZ-.10,3.10,1.66,.09,"#b9d8aa");
+        drawPlaque(vp,selectedIndex,0,1.55,inspectZ,2.95,1.48);
       }
     }
 
@@ -369,6 +413,8 @@ export async function startQuestMuseumXR(
         if (Math.abs(stickY) > 0.68 && time-lastStickChange >= 500) {
           const next=questMoveIndex(selectedIndex,stickY,time-lastStickChange);
           if (next !== selectedIndex) {
+            inspectionIndex = null;
+            liveReady = false;
             selectedIndex=next;
             targetZ=questPositionForIndex(selectedIndex);
             onStatus("VR exhibit " + questExhibitLabel(selectedIndex));
@@ -378,6 +424,18 @@ export async function startQuestMuseumXR(
         }
       }
       currentZ += (targetZ-currentZ)*Math.min(1,delta*5);
+      if (inspectionIndex !== null && time - inspectedAt > 10000) inspectionIndex = null;
+      if (isLocalGuestStation(activeGuest) && liveCanvas && liveTexture &&
+          questExhibitAt(selectedIndex) === activeGuest &&
+          time - lastLiveRefresh >= CRT_REFRESH_MS) {
+        lastLiveRefresh = time;
+        liveReady = paintLocalCRT(liveCanvas,activeGuest);
+        if (liveReady) {
+          renderer.bindTexture(renderer.TEXTURE_2D,liveTexture);
+          renderer.pixelStorei(renderer.UNPACK_FLIP_Y_WEBGL,1);
+          renderer.texSubImage2D(renderer.TEXTURE_2D,0,0,0,renderer.RGBA,renderer.UNSIGNED_BYTE,liveCanvas);
+        }
+      }
       const pose=frame.getViewerPose(refSpace);
       const layer=session.renderState.baseLayer;
       if (!pose || !layer) return;
@@ -397,7 +455,7 @@ export async function startQuestMuseumXR(
       renderer.disable(renderer.SCISSOR_TEST);
     };
     if (!ended) {
-      onStatus("VR active · Left stick: next/previous exhibit · Trigger: open computer · Quest menu: exit VR");
+      onStatus("VR active · Left stick: change exhibit · Trigger: inspect · Trigger again: open 2D station · Quest menu: exit");
       session.requestAnimationFrame(tick);
     }
     return { end: () => ended ? Promise.resolve() : session.end() };

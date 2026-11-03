@@ -7,12 +7,13 @@ import {
 
 interface Props {
   selected: MuseumStationId;
+  activeGuest: MuseumStationId | null;
   onEnter: (id: MuseumStationId) => boolean;
   compact?: boolean;
 }
 
 /** Explicit action only: XR permission/session starts directly from a click. */
-export default function QuestMuseumButton({ selected, onEnter, compact = false }: Props) {
+export default function QuestMuseumButton({ selected, activeGuest, onEnter, compact = false }: Props) {
   const [supported, setSupported] = useState<"checking" | "yes" | "no">("checking");
   const [state, setState] = useState<"idle" | "requesting" | "active">("idle");
   const [message, setMessage] = useState("Quest Browser: open the museum in actual immersive VR.");
@@ -56,6 +57,7 @@ export default function QuestMuseumButton({ selected, onEnter, compact = false }
           setMessage("VR session ended. Re-enter whenever you're ready.");
         }
       },
+      activeGuest,
     ).then(controller => {
       if (!mounted.current) {
         void controller.end().catch(() => undefined);
@@ -94,8 +96,7 @@ export default function QuestMuseumButton({ selected, onEnter, compact = false }
           message}
       </p>
       <p className="quest-vr-disclosure">
-        Native stereo WebXR corridor · left thumbstick changes exhibit · trigger exits VR and opens its existing 2D emulator station.
-        No emulator is running inside the 3D gallery yet. No shared multiplayer session.
+        Native stereo WebXR corridor · trigger inspects the current exhibit; trigger again opens its 2D station. An already-running local DOS/Windows CRT may appear as a read-only VR preview. No shared multiplayer.
       </p>
     </div>
   );
