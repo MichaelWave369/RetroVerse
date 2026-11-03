@@ -48,17 +48,35 @@ To export your own game progress, first save **inside the game**, click the cabi
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
 
+## Rung 13: Export your updated Windows 95/98 hard disk
+
+This rung upgrades the real Windows 9x v86 room with **Export Updated Hard Disk (.img)** so a visitor can keep the files and games written to a user-owned guest hard disk across sessions. The original disk remains unchanged; the browser assembles a **new full-size raw disk image** by combining original File slices with sectors modified by the running emulator.
+
+**How to use:**
+
+1. Select your own authorized, already bootable raw Windows 95/98 hard disk, then boot the guest.
+2. Save files in Windows. Prefer shutting down **inside Windows** before exporting, so its filesystem has flushed changes.
+3. Select **EXPORT UPDATED HARD DISK (.IMG)**. The app confirms, pauses the v86 instance, verifies that the private disk backend still corresponds to the exact selected File, and requests a browser download.
+4. **Verify the download completed** and that its size matches the source disk (32 MiB–2 GiB). Keep this file with your own backups.
+5. On your next visit, select that **exported updated .img as the new boot hard disk** and boot again. Never assume the original input file changed.
+
+**Important technical boundaries:** v86 does not publish a stable public `get_hda_image` method for demand-paged disks. This feature uses the file-backed `AsyncFileBuffer.get_as_file` API via the checked `v86.cpu.devices.ide.primary.master.buffer` internal object. Runtime guards reject unsupported backend shapes, absent dirty-sector tracking, source-File mismatches, and truncated export results. The implementation is based on v86's upstream internals and could change in a future version. Files are assembled from original slices plus in-memory dirty blocks, without copying a 2 GiB raw image into one ArrayBuffer. This is a *downloadable full image*, **not** automatic browser autosave, cloud backup, an incremental patch, or write-back to the original file.
+
+**Save reliability:** The browser may need ample memory and storage to download large images. A successful click is only a *download request*. Until it finishes, disk writes are vulnerable if the page closes. The VM stays paused after export, allowing a user to verify the file before leaving. The engine is internal and not end-to-end validated against real Windows guest files by automated CI: manually test with expendable images, write a file in Windows, export after guest shutdown, boot the updated image in a new session and verify the file is present. Do not rely on this for important data before the test passes.
+
+No Windows binaries, Microsoft media, product keys or game files are added. The disk stays on the visitor's own device; there is no RetroVerse file upload or guest network relay.
+
 ## Rung 12: Windows 95/98 via first-party v86 (bring your own disk)
 
 The ninth station runs a real browser-local Windows 9x-compatible virtual PC using the v86 engine already shipped in RetroVerse. No Microsoft Windows, installer media or product keys are included. The station displays a clearly marked decorative standby screen until the visitor starts the real emulator.
 
 - Choose Windows 95 or Windows 98. The upstream v86 guide recommends Windows 95 OSR2-family or Windows 98 Second Edition.
-- Bring an already bootable, preinstalled and legally usable raw hard disk: IMG, IMA, RAW or BIN, 32 MiB to 2 GiB, sector-aligned. VHD, VDI and QCOW2 containers are not supported. The disk is addressed through an origin-local blob URL with asynchronous HTTP Range requests, instead of reading the full multi-gigabyte file into JS memory. Browser Range support can vary; up-to-date Chrome or Edge is recommended.
+- Bring an already bootable, preinstalled and legally usable raw hard disk: IMG, IMA, RAW or BIN, 32 MiB to 2 GiB, sector-aligned. VHD, VDI and QCOW2 containers are not supported. The disk is attached as an asynchronous browser File image. The file-backed v86 backend loads slices on demand without buffering the entire image at startup. Chrome or Edge is recommended.
 - Attach an optional boot floppy or installation ISO, and exchange them with machine controls after boot. Windows Setup may need extra drivers, manual partitioning and a lengthy process; preinstalled guest media are recommended.
 - Select 32, 64 or 128 MiB of RAM, and use power, pause/resume, reboot, fullscreen or Ctrl+Alt+Del. Existing open SeaBIOS/v86 WASM assets run locally, without any guest network relay.
 - Switching museum stations while a Windows guest is active prompts before shutting it down.
 
-**Data-loss warning:** This first rung does NOT save/restore virtual hard-disk changes. The selected source image is never overwritten; writes performed inside the virtual guest may disappear when powered off or reloaded. Do not trust this for lasting installs, documents, or games until disk-overlay export/restore has been independently implemented and tested. v86 CPU state snapshots alone do not automatically back up disk changes.
+**Export changes before powering off:** Rung 13 adds an explicit updated-disk download for guest file changes. The original source File is never overwritten. Re-select the exported updated .img on your next visit. Do not rely on it for irreplaceable data until actual Windows browser boots and restored file changes have been tested. A VM CPU snapshot alone is not a disk backup.
 
 More information: https://github.com/copy/v86/blob/master/docs/windows-9x.md (official Windows 9x guest preparation guidance). The Windows installation and license remain the user's responsibility. Automated tests verify app config and media validation; live Windows boot still requires manual testing with an authorized guest image.
 
@@ -162,8 +180,9 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 9. **Macintosh 68k:** user-initiated official Infinite Mac embed with System 6 and 7 presets.
 10. **Commodore 64:** independent real C64 READY browser emulator portal, optional experimental embed, user-supplied ROMs and licensed media. Future: first-party runtime after GPL and COOP/COEP review.
 11. **IBM PC/XT 8088:** a real PCjs-hosted IBM 5150/5160 hardware emulator portal, with four presets and an optional experimental embed. Future: independently hosted emulator after media and licensing reviews.
-12. **Windows 95/98:** first-party v86 Windows 9x PC with visitor-owned raw disk, optional floppies and ISO, and temporary session controls. Future: persistent virtual-disk delta export/restore.
-13. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+12. **Windows 95/98:** real v86 guest with user-owned raw disks and optional floppy/ISO media.
+13. **Windows disk export:** save guest-written files by downloading a new updated raw image, guarded against incompatible v86 internals. Future: tested automatic, incremental backups.
+14. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 

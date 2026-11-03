@@ -1,0 +1,6 @@
+
+/* Rung 13: deliberate export flow for user-owned Windows 9x disk changes */
+.win9x-disk-export{padding:14px 12px;margin:16px 0;border:1px solid #8dad74;background:#203f34}
+.win9x-disk-export .form-label{color:#ddf3aa}
+.win9x-disk-export .primary-action{font-size:11px;letter-spacing:0;line-height:1.4;padding:14px 9px}
+.win9x-disk-export .setting-hint{line-height:1.6;margin-top:13px}

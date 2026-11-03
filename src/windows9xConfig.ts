@@ -1,4 +1,4 @@
-import type { V86Options } from "v86";
+import type { V86Image, V86Options } from "v86";
 
 /**
  * Windows 9x guests run in the first-party v86 engine already shipped by
@@ -16,8 +16,7 @@ export interface Windows9xConfig {
   screenContainer: HTMLElement;
   version: Windows9xVersion;
   memoryMB: 32 | 64 | 128;
-  hardDiskUrl: string;
-  hardDiskSize: number;
+  hardDiskFile: File;
   floppyBuffer?: ArrayBuffer;
   cdromUrl?: string;
   cdromSize?: number;
@@ -80,8 +79,8 @@ export function validateWindows9xMedia(
 export function buildWindows9xOptions(config: Windows9xConfig): V86Options {
   if (!WINDOWS9X_PROFILES[config.version]) throw new Error("Unknown Windows 9x guest profile.");
   if (![32, 64, 128].includes(config.memoryMB)) throw new Error("Unsupported Windows guest RAM size.");
-  if (!config.hardDiskUrl.startsWith("blob:")) throw new Error("Use a local browser-managed hard-disk URL.");
-  const diskError = validateWindows9xMedia({ name: "disk.img", size: config.hardDiskSize }, "harddisk");
+  if (!(config.hardDiskFile instanceof File)) throw new Error("The hard disk must be a locally selected File.");
+  const diskError = validateWindows9xMedia(config.hardDiskFile, "harddisk");
   if (diskError) throw new Error(diskError);
   if (config.cdromUrl && (!config.cdromUrl.startsWith("blob:") ||
       !config.cdromSize ||
@@ -98,9 +97,11 @@ export function buildWindows9xOptions(config: Windows9xConfig): V86Options {
     autostart: true,
     disable_speaker: false,
     bootmenu: true,
-    // Demand-page the large local image rather than loading >1 GiB into JS RAM.
-    // Blob URL Range support varies by browser; Chromium is recommended.
-    hda: { url: config.hardDiskUrl, async: true, size: config.hardDiskSize },
+    // Prefer v86's AsyncFileBuffer, not an HTTP/XHR Blob URL.
+    // It reads File slices on demand AND tracks modified 256-byte sectors.
+    // v86's pinned runtime accepts this shape even though V86Image types
+    // haven't yet declared File-backed async buffers.
+    hda: { buffer: config.hardDiskFile, async: true } as unknown as V86Image,
     ...(config.floppyBuffer ? { fda: { buffer: config.floppyBuffer } } : {}),
     ...(config.cdromUrl && config.cdromSize
       ? { cdrom: { url: config.cdromUrl, async: true as const, size: config.cdromSize } }
