@@ -10,13 +10,13 @@
 .hero p{font-size:12px;line-height:1.35;margin:0;max-width:390px}
 .museum .section-head{margin-bottom:7px}
 .section-head{padding-bottom:8px;margin-bottom:10px}
-.stations{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.stations{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
 .station{min-height:53px;text-align:center;align-items:center;justify-content:center;padding:9px 7px;border-radius:4px;transition:border-color .15s,background .15s}
 .station:hover{transform:none}
 .station strong{font-size:11px;line-height:1.24;letter-spacing:0}
 .station-number,.station-icon,.station-description,.station-tag{display:none}
 .station.selected{background:#254236;border-color:#d7f68c}
-.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room{margin-top:12px}
+.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room,.pcxt-room{margin-top:12px}
 #computer-stage{scroll-margin-top:10px}
 .tandy-head,.mac-intro,.amiga-intro,.adventure-intro{padding:7px 0 12px;margin:0;gap:16px}
 .tandy-head h2,.mac-intro h2,.amiga-intro h2,.adventure-intro h2{font-size:clamp(24px,3.4vw,42px);margin:3px 0 5px}
@@ -25,7 +25,7 @@
 .tandy-head .tandy-caveat,.mac-intro .mac-disclaimer,.amiga-intro .amiga-notice{font-size:10px!important;line-height:1.35}
 .tandy-plate,.mac-art,.amiga-plate,.adventure-sign{display:none}
 @media(max-width:1100px){.stations{display:flex;overflow-x:auto;gap:7px;padding-bottom:7px;scroll-snap-type:x proximity;scrollbar-width:thin}.station{flex:0 0 148px;min-height:46px;scroll-snap-align:start}.hero p{display:none}}
-@media(max-width:710px){.topbar{height:51px}.hero{padding:11px 0 6px}.hero h1{font-size:clamp(20px,5.5vw,28px)}.station{flex-basis:136px;min-height:42px;padding:8px}.station strong{font-size:10px}.section-head{font-size:10px}.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room{margin-top:11px}.desktop{padding:11px 8px}}
+@media(max-width:710px){.topbar{height:51px}.hero{padding:11px 0 6px}.hero h1{font-size:clamp(20px,5.5vw,28px)}.station{flex-basis:136px;min-height:42px;padding:8px}.station strong{font-size:10px}.section-head{font-size:10px}.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room,.pcxt-room{margin-top:11px}.desktop{padding:11px 8px}}
 /* Rung 10: C64 station. The provider may disallow embedded shared-memory use. */
 .c64-room{min-width:0}
 .c64-lab{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(275px,1fr);gap:15px}

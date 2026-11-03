@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Seven museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Eight museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -47,6 +47,19 @@ The DOS Game Cabinet uses [js-dos v8 custom file-system save hooks](https://js-d
 To export your own game progress, first save **inside the game**, click the cabinet **SAVE** control to persist the changed files, then choose **EXPORT PROGRESS**. This downloads a standalone versioned RetroVerse ZIP with a checksum-verified file-system-change bundle (not an emulator snapshot). To restore, select the same owned .jsdos game, choose **RESTORE PROGRESS**, and import the ZIP. The app checks archive integrity and the matching SHA-256 bundle identity, asks permission before replacing stored changes, and stops a running player **before** writing a replacement. Start the exact same game again to load the imported files.
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
+
+## Rung 11: Original IBM PC/XT 8088 room
+
+The eighth station adds four real, historically configured IBM 8088 machines provided by the independent [PCjs](https://www.pcjs.org/) project:
+
+- IBM PC XT (5160) in **CGA color** or **MDA monochrome**. Official configurations have an Intel 8088 at 4.77 MHz, 256 KB RAM, and a 10 MB hard disk.
+- IBM PC (5150) in **CGA color** or **MDA monochrome**. Official configurations have a 4.77 MHz Intel 8088, 64 KB RAM and dual floppy drives.
+
+Unlike RetroVerse's earlier v86-based PC, **PCjs explicitly models original IBM 5150/5160 hardware**, including display adapters and ROM-dependent configuration. We use verified official URLs, a selectable model, a prominent full-page launch for playable emulation, and an optional *experimental* remote iframe. The iframe is opened only on the visitor's request and its loading does **not** prove the 8088 machine has booted. PCjs or the browser may block embedding with cross-origin security headers; the full-page machine is always the recommended and supported option. PCjs hosts the emulator and any ROM/disk resources. RetroVerse does not download, mirror or redistribute any IBM ROM, Microsoft DOS disk image or PCjs runtime. Media selection, disk handling, and saves happen within the PCjs provider context, not RetroVerse's Game Vault.
+
+**Attribution:** PCjs © 2012–2026 Jeff Parsons; [MIT project source](https://github.com/jeffpar/pcjs). Its licensing requires that copyright attribution remain visible on the page when PCjs is used.
+
+**Verification:** Automated tests enforce exact official machine URLs and hardware reference metadata. After green CI and Pages deployment, open full-page PCjs and check the BIOS/guest boot, then try color and monochrome configurations. Test optional inline mode separately. React TypeScript and production builds cannot confirm third-party boot. The compact navigation row has been updated for **eight stations** so the extra button does not reintroduce the original scrolling problem.
 
 ## Rung 10: Screen-first compact navigation and Commodore 64
 
@@ -134,7 +147,7 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 8. **Tandy SL/2:** compatible DOSBox Tandy graphics/audio, historic 720 KiB disk extraction.
 9. **Macintosh 68k:** user-initiated official Infinite Mac embed with System 6 and 7 presets.
 10. **Commodore 64:** independent real C64 READY browser emulator portal, optional experimental embed, user-supplied ROMs and licensed media. Future: first-party runtime after GPL and COOP/COEP review.
-11. **IBM PC/XT 8088:** evaluate PCjs for more faithful original XT/MDA/CGA support than v86.
+11. **IBM PC/XT 8088:** a real PCjs-hosted IBM 5150/5160 hardware emulator portal, with four presets and an optional experimental embed. Future: independently hosted emulator after media and licensing reviews.
 12. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
