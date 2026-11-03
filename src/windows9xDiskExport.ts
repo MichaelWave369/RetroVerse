@@ -65,8 +65,10 @@ export function exportUpdatedWindows9xDisk(
   if (!(edits instanceof Set)) {
     throw new Error("This v86 disk backend cannot verify modified sectors. Export aborted.");
   }
-  if (edits.size > Math.ceil(source.size / 256)) {
-    throw new Error("Disk write tracking returned an invalid block count.");
+  const maxBlocks = Math.ceil(source.size / 256);
+  if (edits.size > maxBlocks ||
+      [...edits].some(index => !Number.isSafeInteger(index) || index < 0 || index >= maxBlocks)) {
+    throw new Error("Disk write tracking returned an invalid block count or sector index.");
   }
 
   const file = disk.get_as_file(updatedDiskFilename(source.name));
