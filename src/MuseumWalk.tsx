@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
+import QuestMuseumButton from "./QuestMuseumButton";
 import { museumExhibit, museumWalkOrder, stepMuseum, type MuseumStationId } from "./museumCollection";
 
 interface Props {
@@ -78,6 +79,7 @@ export default function MuseumWalk({ activeStation, visited, onEnter, onClose, o
           </div>
           <div className="timehall-header-actions">
             <span>{visitedSet.size} / {museumWalkOrder.length} EXHIBITS VISITED</span>
+            <QuestMuseumButton selected={selected} onEnter={onEnter} compact />
             <button className="timehall-close" type="button" ref={closeButton} onClick={onClose}
               aria-label="Close Time Hall and return to the computer">✕ CLOSE</button>
           </div>
