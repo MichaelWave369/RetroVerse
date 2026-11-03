@@ -79,6 +79,7 @@ export default function MuseumWalk({ activeStation, visited, onEnter, onClose, o
           </div>
           <div className="timehall-header-actions">
             <span>{visitedSet.size} / {museumWalkOrder.length} EXHIBITS VISITED</span>
+            <QuestMuseumButton selected={selected} onEnter={onEnter} compact />
             <button className="timehall-close" type="button" ref={closeButton} onClick={onClose}
               aria-label="Close Time Hall and return to the computer">✕ CLOSE</button>
           </div>
@@ -132,7 +133,6 @@ export default function MuseumWalk({ activeStation, visited, onEnter, onClose, o
               <div className="timehall-technology"><span>EMULATOR / PLATFORM</span><strong>{current.engine}</strong></div>
             </div>
             <div className="timehall-action-panel">
-              <QuestMuseumButton selected={selected} onEnter={onEnter} />
               {visitedSet.has(current.id) && <span className="timehall-visited">✓ EXHIBIT VISITED</span>}
               <button className="timehall-enter" type="button" onClick={() => onEnter(current.id)}>
                 ENTER THIS COMPUTER <span aria-hidden="true">↗</span>
