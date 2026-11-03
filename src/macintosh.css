@@ -1,0 +1,44 @@
+/* Dedicated Macintosh 68k room. Remote Infinite Mac iframe only after power on. */
+.mac-room{margin-top:62px}
+.mac-intro{display:flex;align-items:center;justify-content:space-between;gap:36px;padding:24px 0 35px}
+.mac-intro h2{font-size:clamp(40px,6vw,78px);letter-spacing:-.067em;margin:14px 0}
+.mac-intro h2 em{font-style:normal;color:#d4f38c}
+.mac-intro p{font-size:14px;line-height:1.65;color:#a9c3ac;max-width:780px}
+.mac-intro a,.mac-footnote a{color:#d6ef96}
+.mac-disclaimer{font-size:12px!important;color:#e6cb91!important;border-left:2px solid #b39e6c;padding-left:14px}
+.mac-art{width:200px;height:263px;flex:none;padding:19px;display:flex;align-items:center;flex-direction:column;gap:11px;background:#d6d5c5;border:6px solid #e6e4d3;border-radius:17px 17px 9px 9px;color:#4c5345;box-shadow:7px 9px 0 #101b17}
+.mac-art-screen{width:100%;height:141px;border:11px solid #5a6055;border-radius:9px;background:#b2c7ac;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.mac-art-screen span,.mac-art-screen small{font:9px "DM Mono",monospace}
+.mac-art-screen b{font-size:58px;line-height:1}
+.mac-art-drive{width:86px;height:6px;background:#687065;align-self:flex-end;margin:14px 0}
+.mac-art strong{font-size:13px}
+.mac-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,1fr);gap:16px}
+.mac-crt{background:#cbd0bf;padding:17px;border:1px solid #b3bbac;border-radius:10px;min-width:0}
+.mac-crt-head,.mac-crt-foot{display:flex;justify-content:space-between;align-items:center;gap:13px;flex-wrap:wrap;font:10px "DM Mono",monospace;color:#3a5142}
+.mac-crt-head{padding-bottom:14px}
+.mac-crt-screen{position:relative;aspect-ratio:4/3;min-height:350px;border:11px solid #39433c;border-radius:13px;background:#0c1511;overflow:hidden}
+.mac-crt-screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#b5c4ad}
+.mac-standby{position:absolute;inset:0;background:radial-gradient(#314e3d,#0d1e17 76%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:22px;color:#e8f5d2}
+.mac-standby>span{font-size:81px;line-height:1}
+.mac-standby strong{font-size:clamp(18px,2.5vw,28px)}
+.mac-standby p{font-size:13px;color:#bbcdb3}
+.mac-standby small{font:10px "DM Mono",monospace;color:#a8be9d}
+.mac-crt-foot{padding-top:16px}
+.mac-crt-foot>div{display:flex;gap:9px}
+.mac-crt-foot button{background:#e9ebd9;border:1px solid #778476;color:#233b2c;padding:10px 13px;font:10px "DM Mono",monospace}
+.mac-crt-foot button:disabled{opacity:.5}
+.mac-controls{padding:24px;background:#1a332b;border:1px solid #54705c;min-width:0}
+.mac-controls select{width:100%;background:#11261e;color:#edf6da;border:1px solid #587a5c;padding:12px;margin:10px 0}
+.mac-controls .setting-hint{line-height:1.65}
+.mac-spec{background:#233f35;border:1px solid #4f715d;padding:13px;color:#c7d5b9;font:11px/2 "DM Mono",monospace}
+.mac-link{display:block;margin-top:10px;border:1px solid #789b71;background:#284739;color:#e5f7c6;padding:14px 8px;text-decoration:none;text-align:center;font:10px "DM Mono",monospace}
+.mac-link.secondary{background:#172e26}
+.mac-history{margin-top:63px}
+.mac-history-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.mac-history-grid>div{border:1px solid #53745e;background:#1c322b;padding:22px}
+.mac-history-grid b{color:#d8f393;font:11px "DM Mono",monospace}
+.mac-history-grid h3{font-size:28px;margin:13px 0 8px;letter-spacing:-.05em}
+.mac-history-grid p,.mac-footnote{color:#acc0ad;font-size:12px;line-height:1.7}
+.mac-footnote{margin-top:20px}
+@media(max-width:1030px){.mac-layout{grid-template-columns:1fr}}
+@media(max-width:700px){.mac-intro{align-items:flex-start}.mac-art{display:none}.mac-crt{padding:9px}.mac-crt-screen{min-height:300px;border-width:6px}.mac-history-grid{grid-template-columns:1fr}.mac-room{margin-top:42px}}

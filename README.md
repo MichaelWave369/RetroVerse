@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Five museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Six museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -47,6 +47,20 @@ The DOS Game Cabinet uses [js-dos v8 custom file-system save hooks](https://js-d
 To export your own game progress, first save **inside the game**, click the cabinet **SAVE** control to persist the changed files, then choose **EXPORT PROGRESS**. This downloads a standalone versioned RetroVerse ZIP with a checksum-verified file-system-change bundle (not an emulator snapshot). To restore, select the same owned .jsdos game, choose **RESTORE PROGRESS**, and import the ZIP. The app checks archive integrity and the matching SHA-256 bundle identity, asks permission before replacing stored changes, and stops a running player **before** writing a replacement. Start the exact same game again to load the imported files.
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
+
+## Rung 9: Macintosh Plus / System 6 via Infinite Mac
+
+The sixth museum station embeds the **real third-party Infinite Mac emulator** using its [official embed API](https://infinitemac.org/embed-docs). The default Macintosh Plus preset runs System 6.0.8 with Mini vMac. Another preset uses a Quadra 650 with System 7.1 through Basilisk II. The visitor explicitly chooses to turn the system on before the iframe loads.
+
+The React station provides boot/stop, restart, a system selector, status messages filtered to the trusted Infinite Mac iframe origin, and official full-page links as a fallback. If the iframe is slow or blocked, the original provider runs independently. A successful CI build proves the React station compiles but cannot guarantee remote guest boot.
+
+**This is not a self-hosted Macintosh.** RetroVerse does not mirror Apple ROMs, system software, commercial applications or the Infinite Mac runtime. The third party controls downloads, saves, cookies and other data handling; users should review the provider before loading. Browser cross-origin-isolation restrictions may reduce performance.
+
+References: [Infinite Mac](https://infinitemac.org), [embed generator](https://infinitemac.org/embed), [source](https://github.com/mihaip/infinite-mac). Our later roadmap can investigate independent builds with explicitly authorized ROM/media.
+
+## Rung 8: Tandy 1000 SL/2
+
+The fifth station provides a DOSBox Tandy-compatible graphics/audio profile and a local 720 KiB FAT12 floppy reader for user-authorized DOS files. **It is not a ROM-accurate recreation of an SL/2 motherboard** and does not bundle Tandy DOS 3.3/DeskMate. The historical [four-disk archive](https://archive.org/details/Tandy1000SL2Disks) is linked for reference only.
 
 ## Rung 3: classic Amiga
 
@@ -105,7 +119,11 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 5. **Local Game Vault:** IndexedDB-backed DOS game shelf with play, export and remove; ScummVM self-hosting plan.
 6. **Portable backups:** verified ZIP export/import of owned .jsdos game collections with format tests. Future: full save-game portability.
 7. **Save progress:** SHA-256-bound DOS file-system deltas with independent verified ZIP export/import. Future: backward-compatible save migrations and quick-state support.
-8. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+8. **Tandy SL/2:** compatible DOSBox Tandy graphics/audio, historic 720 KiB disk extraction.
+9. **Macintosh 68k:** user-initiated official Infinite Mac embed with System 6 and 7 presets.
+10. **Commodore 64:** evaluate a faithful browser C64 core and authorized user-supplied ROMs.
+11. **IBM PC/XT 8088:** evaluate PCjs for more faithful original XT/MDA/CGA support than v86.
+12. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 
