@@ -48,6 +48,24 @@ To export your own game progress, first save **inside the game**, click the cabi
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
 
+## Rung 16: Quest 3 native immersive WebXR museum
+
+The optional **Time Hall** now offers **ENTER QUEST 3 VR**, a true native WebXR `immersive-vr` experience running in Meta Quest Browser and other compatible secure-context headset browsers. This is a self-hosted **stereoscopic WebGL2 museum corridor** built with native WebXR, locally generated geometry and canvas-based exhibit plaques. It uses **no new npm dependencies, third-party 3D engine, copyrighted computer art, external CDN or ROM images**.
+
+- Open the regular Time Hall using the small heading control. On Quest Browser, **ENTER QUEST 3 VR** requests headset permission in direct response to the user's click. A feature check disables the button on unsupported browsers; the usual desktop museum remains available.
+- The headset renders the same nine historically ordered computer exhibits with accurate names, eras and emulator-provider disclosures. Walk the corridor **one room at a time using the left controller thumbstick forward/back**. The transition is gently animated between exhibits.
+- Press the **controller trigger** to exit immersive VR and enter the corresponding **existing 2D RetroVerse emulator station**, respecting the site's current session-safety checks. The Meta/Quest system menu can also exit VR without launching a machine.
+- A compact centered exhibit plaque makes the current computer and controls readable at head height. Each room is built from shaded 3D architecture, generated title textures, and no remotely fetched media.
+- WebXR session teardown releases GPU textures, buffers, shaders and the scratch canvas. A failed headset permission or missing WebGL2/VR layer shows a useful error instead of breaking the 2D museum.
+- `local-floor` reference space is preferred and `local` supported as a fallback. View, projection and viewport are provided by the XR session so rendering follows tracked headset pose, including true stereo eyes.
+- No guest emulator executes **inside VR**. Pressing the trigger explicitly exits immersive mode and returns to the standard browser station. Neither multi-user synchronization nor tracked hands nor controller raycast interaction is in this rung. Those are separate future milestones.
+
+**Safety, user experience and performance:** Immersive support is detected through `navigator.xr.isSessionSupported("immersive-vr")`, not a user-agent guess. The immersive session only starts after a direct user action. The WebXR layer and graphics resources stay unloaded until VR is requested; desktop/phone navigation remains compact and functional. Visitors can exit using their headset menu. The WebXR API requires HTTPS and device/browser permission. It is optional and **not available on all browsers**.
+
+**Tests:** Four new pure tests validate the nine-door WebXR map, thumbstick thresholds/clamping, column-major matrix multiplication, and spatial transform correctness, alongside the entire museum/emulator regression suite. CI confirms TypeScript and production-build health; **actual stereo rendering, input axes mapping, trigger events, comfort and portal navigation must be smoke-tested on Quest 3** after Pages deployment. The exact thumbstick axes can differ by controller/browser; test on both of your Quest 3 headsets.
+
+**Browser notes:** [Meta Quest Browser specifications](https://developers.meta.com/vr/documentation/web/browser-specs/), [MDN WebXR immersive session guidance](https://developer.mozilla.org/en-US/docs/Web/API/XRSystem/requestSession).
+
 ## Rung 15: The Time Hall · optional explorable history gallery
 
 RetroVerse now includes an optional **Time Hall** museum experience. Select the small **EXPLORE TIME HALL** button next to the original compact machine tabs. The hall opens as a full-screen, accessible overlay, with a CSS perspective corridor, nine unique computer exhibits, period plaques, hardware-inspired visual displays and a chronological timeline. Select a door or press Left/Right arrows to walk between eras. **ENTER THIS COMPUTER** closes the hall and takes you straight to the real existing emulator station.
@@ -212,7 +230,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 13. **Windows disk export:** save guest-written files by downloading a new updated raw image, guarded against incompatible v86 internals. Future: tested automatic, incremental backups.
 14. **Windows download verification:** compare an actual browser-downloaded updated image byte-for-byte and select a verified image for next boot.
 15. **Time Hall museum:** optional CSS-perspective nine-exhibit history corridor, keyboard navigation, portable screen-first layout and browser-local visit stamps.
-16. **Future XR museum:** real walkable WebXR rooms and Quest 3 control integration, using the existing emulator stations rather than duplicating their engines.
+16. **Quest WebXR museum:** native immersive stereo WebGL2 gallery and thumbstick/trigger exhibit transitions on supported headsets, without shipping proprietary ROMs.
+17. **Future shared XR:** Quest 3 co-presence, user-calibrated locomotion, controller-ray selection, and separately governed live emulator surfaces.
 
 ## Licensing and safety
 

@@ -1,0 +1,10 @@
+/* Rung 16: native WebXR entrance inside the optional Time Hall.
+   No heavyweight scene library or external 3D CDN. */
+.quest-museum-entry{display:flex;flex-direction:column;gap:9px;border:1px solid #66846e;background:linear-gradient(135deg,#223d39,#182e31);padding:13px;margin-bottom:8px;min-width:0}
+.quest-enter-vr{padding:14px 12px;background:#bfd998;color:#183025;border:1px solid #ecf6d3;font:bold 12px "DM Mono",monospace;letter-spacing:.045em;text-align:center}
+.quest-enter-vr:hover:not(:disabled){filter:brightness(1.13)}
+.quest-enter-vr:disabled{opacity:.52;cursor:not-allowed}
+.quest-vr-status{font:10px/1.6 "DM Mono",monospace;color:#dcefc8;margin:0;overflow-wrap:anywhere}
+.quest-vr-disclosure{font:9px/1.6 "DM Mono",monospace;color:#a7c3b0;margin:0}
+.timehall-action-panel .quest-museum-entry p{display:block}
+@media(max-width:720px){.quest-museum-entry{padding:10px;gap:7px}.quest-enter-vr{padding:12px 9px;font-size:11px}.timehall-action-panel .quest-vr-disclosure{font-size:9px}}
