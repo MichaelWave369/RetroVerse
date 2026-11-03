@@ -5,6 +5,7 @@ import {
   WINDOWS9X_V86_GUIDE, type Windows9xMediaRole, type Windows9xVersion,
 } from "./windows9xConfig";
 import { exportUpdatedWindows9xDisk } from "./windows9xDiskExport";
+import { verifyWindowsDiskDownload } from "./windows9xVerify";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
 
@@ -22,12 +23,17 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
   const [message, setMessage] = useState("Choose your own bootable raw Windows 9x disk image, then power on.");
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
+  const [exportAvailable, setExportAvailable] = useState(false);
+  const [verifiedImage, setVerifiedImage] = useState<File | null>(null);
+  const [verifyProgress, setVerifyProgress] = useState<number | null>(null);
 
   const guest = useRef<V86 | null>(null);
   const screen = useRef<HTMLDivElement | null>(null);
   const diskPicker = useRef<HTMLInputElement | null>(null);
   const floppyPicker = useRef<HTMLInputElement | null>(null);
   const cdPicker = useRef<HTMLInputElement | null>(null);
+  const verifyPicker = useRef<HTMLInputElement | null>(null);
+  const lastExport = useRef<File | null>(null);
   const generation = useRef(0);
   const localUrls = useRef<string[]>([]);
 
@@ -86,6 +92,10 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
     }
     if (role === "harddisk") {
       if (on) { setMessage("Power off before changing the Windows hard disk."); return; }
+      lastExport.current = null;
+      setExportAvailable(false);
+      setVerifiedImage(null);
+      setVerifyProgress(null);
       setHardDisk(file);
       setMessage("Selected " + file.name + ". v86 will read slices locally, tracking changed disk sectors for optional export.");
       return;
@@ -127,6 +137,10 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
     const err = validateWindows9xMedia(hardDisk, "harddisk");
     if (err) { setMessage(err); return; }
     const id = ++generation.current;
+    lastExport.current = null;
+    setExportAvailable(false);
+    setVerifiedImage(null);
+    setVerifyProgress(null);
     setStatus("booting");
     setBusy(true);
     setProgress(null);
@@ -220,6 +234,10 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       setStatus("paused");
       setMessage("Assembling a new virtual hard-disk image from original sectors and guest writes...");
       const result = exportUpdatedWindows9xDisk(vm, hardDisk, true);
+      lastExport.current = result.file;
+      setExportAvailable(true);
+      setVerifiedImage(null);
+      setVerifyProgress(null);
       downloadUrl = URL.createObjectURL(result.file);
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
@@ -230,7 +248,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       setMessage(
         "Updated disk download requested (" + result.modifiedBlocks.toLocaleString() +
         " modified 256-byte sectors). VERIFY the full-size downloaded image before powering off. " +
-        "Re-select that exported image on your next visit to continue your Windows files and games."
+        "Now use VERIFY DOWNLOADED IMAGE to check the actual downloaded bytes against the exported disk before restarting."
       );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to export updated Windows hard disk.");
@@ -242,6 +260,51 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
         window.setTimeout(() => URL.revokeObjectURL(url), 120000);
       }
     }
+  }
+
+
+
+  async function verifyDownloadedImage(file: File) {
+    const expected = lastExport.current;
+    if (!expected || busy || !exportAvailable) {
+      setMessage("Export an updated Windows disk from this session before verifying it.");
+      return;
+    }
+    setBusy(true);
+    setVerifiedImage(null);
+    setVerifyProgress(0);
+    try {
+      const result = await verifyWindowsDiskDownload(expected, file, (compared, total) => {
+        setVerifyProgress(Math.floor(compared / total * 100));
+      });
+      setVerifiedImage(file);
+      setVerifyProgress(100);
+      setMessage(
+        "VERIFIED: Downloaded image matches the exported file byte for byte (" +
+        result.bytesChecked.toLocaleString() + " bytes, " + result.chunksChecked +
+        " chunks). Power off the guest, choose USE VERIFIED DISK, then boot it to check your files inside Windows."
+      );
+    } catch (error) {
+      setVerifiedImage(null);
+      setMessage(error instanceof Error ? error.message : "Unable to verify downloaded disk.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function useVerifiedImage() {
+    if (on || busy || !verifiedImage) {
+      setMessage("Power off the virtual PC before selecting a verified image.");
+      return;
+    }
+    const selected = verifiedImage;
+    setHardDisk(selected);
+    lastExport.current = null;
+    setVerifiedImage(null);
+    setExportAvailable(false);
+    setVerifyProgress(null);
+    setMessage("Verified updated image selected as your new boot disk: " +
+      selected.name + ". Power on to verify Windows starts and your saved files exist.");
   }
 
   function changeVersion(next: Windows9xVersion) {
@@ -338,6 +401,24 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
               onClick={() => void downloadUpdatedDisk()}>↓ EXPORT UPDATED HARD DISK (.IMG)</button>
             <p className="setting-hint">Inside Windows: save your files and shut down the guest, then export here. The VM pauses during export. Downloading a full 32 MiB–2 GiB disk may take time. Verify the browser download completes before closing this station. To resume later, select the exported .img as your boot disk.</p>
             <p className="setting-hint">This uses a guarded, internal v86 file-backed-disk export API. If the installed engine cannot provide modified sectors, it reports an error instead of creating a misleading backup. Browser testing with real Windows media remains required.</p>
+
+            <div className="win9x-verify-tools">
+              <label className="form-label">VERIFY THE ACTUAL DOWNLOADED IMAGE</label>
+              <button className="file-button" type="button" disabled={!exportAvailable || busy}
+                onClick={() => verifyPicker.current?.click()}>✓ SELECT DOWNLOADED .IMG TO VERIFY</button>
+              <input ref={verifyPicker} hidden type="file" accept=".img,.ima,.raw,.bin" onChange={e=>{
+                const selected=e.currentTarget.files?.[0];
+                e.currentTarget.value="";
+                if(selected)void verifyDownloadedImage(selected);
+              }}/>
+              {verifyProgress !== null && <p className="setting-hint" role="status">Verified comparison progress: {verifyProgress}%</p>}
+              {verifiedImage && <button className="file-button win9x-verified-action"
+                disabled={on || busy} type="button" onClick={useVerifiedImage}>
+                ✓ USE VERIFIED DISK ON NEXT BOOT {on ? "(POWER OFF FIRST)" : ""}
+              </button>}
+              <p className="setting-hint">Read the completed browser download back into RetroVerse for an exact byte-by-byte comparison. For a 2 GiB disk this reads both images in 4 MiB chunks and may take time. This does not prove the Windows guest flushed its data; boot and inspect the files after verification.</p>
+            </div>
+
           </div>
           <div className="win9x-quick-actions">
             <button type="button" disabled={!canControl || busy}
@@ -350,7 +431,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       <div className="win9x-notes">
         <div><strong>REAL EMULATION, NOT A SIMULATED WINDOWS UI.</strong><p>RetroVerse's existing v86 WebAssembly core runs the PC locally. The green CI build cannot prove your individual Windows image boots or that all drivers work. Chrome and Edge are recommended for very large local images.</p></div>
         <div><strong>BRING YOUR OWN LEGAL MEDIA.</strong><p>No Microsoft Windows binaries, serial keys, installation CDs or commercial software are provided or hosted. Use a Windows 95 OSR2 or Windows 98 SE image you are entitled to use.</p></div>
-        <div><strong>EXPORT YOUR UPDATED DISK.</strong><p>The original .img file is never overwritten. After saving and shutting down Windows inside the guest, export an updated full disk image and verify that the browser downloaded it completely. You must select that updated image next visit. The export uses an internal v86 API and needs real-browser verification.</p></div>
+        <div><strong>EXPORT YOUR UPDATED DISK.</strong><p>The original .img file is never overwritten. Export a new disk, read the completed download back for exact byte comparison, then boot the verified image and check your files. The export uses an internal v86 API and still requires real Windows browser testing.</p></div>
       </div>
     </section>
   );

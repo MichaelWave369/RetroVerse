@@ -48,6 +48,20 @@ To export your own game progress, first save **inside the game**, click the cabi
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
 
+## Rung 14: Verify your Windows 9x disk download and restore it
+
+After exporting an updated Windows 95/98 hard disk, RetroVerse can **verify the actual file downloaded by the browser** before you rely on it. This checks *every byte*, not merely the filename or file size, while loading at most two 4 MiB slices into RAM at once. No disk content is uploaded and no external backend is needed.
+
+1. Use your own authorized raw Windows disk and save a small test file inside the emulated Windows machine. Shut down the guest within Windows if possible to flush its filesystem.
+2. Choose **EXPORT UPDATED HARD DISK (.IMG)**. Wait until your browser has fully downloaded the file. The emulator pauses.
+3. Choose **SELECT DOWNLOADED .IMG TO VERIFY**, and select that completed download from your Downloads directory. RetroVerse reads it and compares every byte to the in-session export. A size mismatch, corruption, truncation or canceled verification is rejected.
+4. Once verification reports success, power the virtual PC off. Use **USE VERIFIED DISK ON NEXT BOOT**, then power it on again with the verified updated disk. Check in Windows that the saved test file actually exists.
+5. Keep an independent backup of the verified downloaded image.
+
+**Boundaries:** Byte-for-byte identity means the download matches the image created in this RetroVerse session. It **does not** prove a Windows guest had flushed its files to disk, that all v86 modified sectors were correctly assembled, or that a copied operating system will boot successfully. Verification is intentionally available only for the last exported image in the current browser session; refreshing or selecting a new source disk clears the in-memory export reference. Up to 2 GiB of file data may be read twice, in bounded chunks, so this can take time. Browser tests with expendable 9x images are still needed before trusting important data.
+
+**Automated tests:** Exact multi-chunk comparisons, corrupted same-size files, truncated/expanded downloads, invalid inputs, cancellation and failed-comparison progress. Rung 14 does not add any Microsoft software or other copyrighted media to RetroVerse.
+
 ## Rung 13: Export your updated Windows 95/98 hard disk
 
 This rung upgrades the real Windows 9x v86 room with **Export Updated Hard Disk (.img)** so a visitor can keep the files and games written to a user-owned guest hard disk across sessions. The original disk remains unchanged; the browser assembles a **new full-size raw disk image** by combining original File slices with sectors modified by the running emulator.
@@ -182,7 +196,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 11. **IBM PC/XT 8088:** a real PCjs-hosted IBM 5150/5160 hardware emulator portal, with four presets and an optional experimental embed. Future: independently hosted emulator after media and licensing reviews.
 12. **Windows 95/98:** real v86 guest with user-owned raw disks and optional floppy/ISO media.
 13. **Windows disk export:** save guest-written files by downloading a new updated raw image, guarded against incompatible v86 internals. Future: tested automatic, incremental backups.
-14. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+14. **Windows download verification:** compare an actual browser-downloaded updated image byte-for-byte and select a verified image for next boot.
+15. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 

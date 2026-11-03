@@ -1,0 +1,8 @@
+
+/* Rung 14: verify a completed browser disk download before restoring it */
+.win9x-verify-tools{margin-top:15px;padding:13px;border:1px solid #7d9b70;background:#17362e}
+.win9x-verify-tools .form-label{display:block;color:#d9f0ae;margin-bottom:9px}
+.win9x-verify-tools .file-button{width:100%;white-space:normal;overflow-wrap:anywhere}
+.win9x-verify-tools .setting-hint{font-size:11px;line-height:1.6;margin-top:12px}
+.win9x-verify-tools .win9x-verified-action{margin-top:10px;border-color:#d1eaa3;background:#2b523d;color:#e9f9c8}
+.win9x-verify-tools button:disabled{cursor:not-allowed;opacity:.48}
