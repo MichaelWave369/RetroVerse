@@ -4,6 +4,7 @@ import {
   buildWindows9xOptions, validateWindows9xMedia, WINDOWS9X_PROFILES,
   WINDOWS9X_V86_GUIDE, type Windows9xMediaRole, type Windows9xVersion,
 } from "./windows9xConfig";
+import { exportUpdatedWindows9xDisk } from "./windows9xDiskExport";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
 
@@ -54,7 +55,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
 
   async function shutdown(force = false) {
     if (!force && guest.current && !window.confirm(
-      "Power off Windows? This experimental station does not export hard-disk changes. Save or back up your original media separately."
+      "Power off Windows? Export the UPDATED HARD DISK first if you want to keep changes made inside Windows. Continue powering off?"
     )) return;
     const id = ++generation.current;
     const old = guest.current;
@@ -71,7 +72,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
         setStatus("off");
         setProgress(null);
         setBusy(false);
-        setMessage("PC powered off. Your source image was never modified. Session disk changes are not exported.");
+        setMessage("PC powered off. The original source image is unchanged. Only an updated image you explicitly downloaded can preserve guest disk writes.");
         onSessionChange(false);
       }
     }
@@ -86,7 +87,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
     if (role === "harddisk") {
       if (on) { setMessage("Power off before changing the Windows hard disk."); return; }
       setHardDisk(file);
-      setMessage("Selected " + file.name + ". This disk stays on your device and is accessed on demand.");
+      setMessage("Selected " + file.name + ". v86 will read slices locally, tracking changed disk sectors for optional export.");
       return;
     }
     if (role === "floppy") {
@@ -134,12 +135,11 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       const mod = await import("v86");
       const floppyBuffer = floppy ? await floppy.arrayBuffer() : undefined;
       if (id !== generation.current || !screen.current) return;
-      const hdaUrl = keepLocalUrl(hardDisk);
       const cdUrl = cdrom ? keepLocalUrl(cdrom) : undefined;
       const vm = new mod.V86(buildWindows9xOptions({
         baseUrl: import.meta.env.BASE_URL,
         screenContainer: screen.current,
-        version, memoryMB, hardDiskUrl: hdaUrl, hardDiskSize: hardDisk.size,
+        version, memoryMB, hardDiskFile: hardDisk,
         floppyBuffer, cdromUrl: cdUrl, cdromSize: cdrom?.size,
       }));
       guest.current = vm;
@@ -167,7 +167,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
         if (id !== generation.current) return;
         setStatus("error");
         setMessage("Disk or firmware read failed: " + (e.file_name || "unknown file") +
-          ". Local Blob URL Range support can vary by browser. Try updated Chrome/Edge.");
+          ". Check the image integrity and try updated Chrome/Edge.");
       });
       setBusy(false);
     } catch (error) {
@@ -201,6 +201,46 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       }
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Pause/resume failed.");
+    }
+  }
+
+
+  async function downloadUpdatedDisk() {
+    if (!hardDisk || !guest.current || !canControl || busy) return;
+    if (!window.confirm(
+      "Have you saved your files and shut down Windows inside the guest? " +
+      "RetroVerse will pause v86 and export an updated FULL disk image. " +
+      "The original image stays unchanged. Continue?"
+    )) return;
+    setBusy(true);
+    let downloadUrl: string | null = null;
+    try {
+      const vm = guest.current;
+      if (vm.is_running()) await vm.stop();
+      setStatus("paused");
+      setMessage("Assembling a new virtual hard-disk image from original sectors and guest writes...");
+      const result = exportUpdatedWindows9xDisk(vm, hardDisk, true);
+      downloadUrl = URL.createObjectURL(result.file);
+      const anchor = document.createElement("a");
+      anchor.href = downloadUrl;
+      anchor.download = result.file.name;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setMessage(
+        "Updated disk download requested (" + result.modifiedBlocks.toLocaleString() +
+        " modified 256-byte sectors). VERIFY the full-size downloaded image before powering off. " +
+        "Re-select that exported image on your next visit to continue your Windows files and games."
+      );
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Unable to export updated Windows hard disk.");
+    } finally {
+      setBusy(false);
+      if (downloadUrl) {
+        const url = downloadUrl;
+        // Large disk downloads can be slow to initialize; avoid early release.
+        window.setTimeout(() => URL.revokeObjectURL(url), 120000);
+      }
     }
   }
 
@@ -249,7 +289,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
               <button type="button" disabled={!canControl || busy} onClick={() => guest.current?.screen_go_fullscreen()}>⛶ FULLSCREEN</button>
             </div>
           </div>
-          <div className="win9x-bottom-note">Click inside the CRT to control Windows. The browser session does not save hard-disk changes back into the original image.</div>
+          <div className="win9x-bottom-note">Click the CRT for keyboard and mouse. After saving inside Windows, export an updated hard-disk image to preserve guest files between sessions.</div>
         </div>
         <aside className="win9x-panel">
           <div className="panel-head"><span>WINDOWS MACHINE DECK</span><span className={"status-pill status-" + status}><i /> {status.toUpperCase()}</span></div>
@@ -271,7 +311,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
           <input ref={diskPicker} hidden type="file" accept=".img,.ima,.raw,.bin" onChange={e=>{
             const file=e.currentTarget.files?.[0];e.currentTarget.value="";if(file)void chooseMedia(file,"harddisk");
           }}/>
-          <p className="setting-hint">Choose your own preinstalled 32 MiB to 2 GiB raw disk (not VHD/QCOW2). The emulator reads it on demand from your device using a browser Blob URL.</p>
+          <p className="setting-hint">Choose your own preinstalled 32 MiB to 2 GiB raw disk (not VHD/QCOW2). v86 reads local file slices and tracks modified sectors without overwriting the original.</p>
           <div className="win9x-media-grid">
             <div><span className="form-label">OPTIONAL BOOT FLOPPY</span>
               <button className="file-button" type="button" disabled={busy} onClick={() => floppyPicker.current?.click()}>
@@ -292,6 +332,13 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
           <div className="panel-divider" />
           <button className={"primary-action" + (on ? " danger" : "")} type="button" disabled={busy}
             onClick={() => void (on ? shutdown() : powerOn())}>{on ? "■ POWER OFF" : "⏻ POWER ON WINDOWS PC"}</button>
+          <div className="win9x-disk-export">
+            <label className="form-label">KEEP YOUR WINDOWS FILES</label>
+            <button className="primary-action" type="button" disabled={!canControl || busy || !hardDisk}
+              onClick={() => void downloadUpdatedDisk()}>↓ EXPORT UPDATED HARD DISK (.IMG)</button>
+            <p className="setting-hint">Inside Windows: save your files and shut down the guest, then export here. The VM pauses during export. Downloading a full 32 MiB–2 GiB disk may take time. Verify the browser download completes before closing this station. To resume later, select the exported .img as your boot disk.</p>
+            <p className="setting-hint">This uses a guarded, internal v86 file-backed-disk export API. If the installed engine cannot provide modified sectors, it reports an error instead of creating a misleading backup. Browser testing with real Windows media remains required.</p>
+          </div>
           <div className="win9x-quick-actions">
             <button type="button" disabled={!canControl || busy}
               onClick={() => guest.current?.keyboard_send_scancodes([0x1d,0x38,0x53,0xd3,0xb8,0x9d])}>CTRL+ALT+DEL</button>
@@ -303,7 +350,7 @@ export default function Windows9xRoom({ onSessionChange }: Props) {
       <div className="win9x-notes">
         <div><strong>REAL EMULATION, NOT A SIMULATED WINDOWS UI.</strong><p>RetroVerse's existing v86 WebAssembly core runs the PC locally. The green CI build cannot prove your individual Windows image boots or that all drivers work. Chrome and Edge are recommended for very large local images.</p></div>
         <div><strong>BRING YOUR OWN LEGAL MEDIA.</strong><p>No Microsoft Windows binaries, serial keys, installation CDs or commercial software are provided or hosted. Use a Windows 95 OSR2 or Windows 98 SE image you are entitled to use.</p></div>
-        <div><strong>TEMPORARY MACHINE CHANGES.</strong><p>The original local .img file is never overwritten. Guest disk writes are not exported or synchronized by this initial version. Do not rely on this for lasting Windows saves or installations; retain an independent backup of the source image.</p></div>
+        <div><strong>EXPORT YOUR UPDATED DISK.</strong><p>The original .img file is never overwritten. After saving and shutting down Windows inside the guest, export an updated full disk image and verify that the browser downloaded it completely. You must select that updated image next visit. The export uses an internal v86 API and needs real-browser verification.</p></div>
       </div>
     </section>
   );

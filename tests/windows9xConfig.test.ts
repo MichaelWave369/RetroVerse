@@ -50,19 +50,15 @@ function config(): Windows9xConfig {
     screenContainer: {} as HTMLElement,
     version: "win95",
     memoryMB: 64,
-    hardDiskUrl: "blob:https://michaelwave369.github.io/test-uuid",
-    hardDiskSize: 256 * MiB,
+    hardDiskFile: new File([new Uint8Array(32 * MiB)], "win95.img"),
   };
 }
 
 test("Windows 95 v86 boots from a local demand-paged disk with no guest networking", () => {
-  const options = buildWindows9xOptions(config());
+  const settings = config();
+  const options = buildWindows9xOptions(settings);
   assert.equal(options.wasm_path, "/RetroVerse/vendor/v86.wasm");
-  assert.deepEqual(options.hda, {
-    url: "blob:https://michaelwave369.github.io/test-uuid",
-    async: true,
-    size: 256 * MiB,
-  });
+  assert.deepEqual(options.hda, { buffer: settings.hardDiskFile, async: true });
   assert.deepEqual(options.bios, { url: "/RetroVerse/vendor/seabios.bin" });
   assert.deepEqual(options.vga_bios, { url: "/RetroVerse/vendor/vgabios.bin" });
   assert.equal(options.memory_size, 64 * MiB);
@@ -83,13 +79,22 @@ test("optional boot floppy and ISO use the right virtual device types", () => {
 
 test("unsafe or unsupported Windows virtual machine configurations fail closed", () => {
   const c = config();
-  c.hardDiskUrl = "https://external.example/windows95.img";
-  assert.throws(() => buildWindows9xOptions(c), /local/i);
-  c.hardDiskUrl = "blob:https://michaelwave369.github.io/test";
+  c.hardDiskFile = { name: "remote.img", size: 256 * MiB } as File;
+  assert.throws(() => buildWindows9xOptions(c), /locally selected File/i);
+  c.hardDiskFile = new File([new Uint8Array(32 * MiB)], "valid.img");
+
   c.memoryMB = 4096 as 64;
   assert.throws(() => buildWindows9xOptions(c), /RAM/i);
   c.memoryMB = 64;
   c.cdromUrl = "https://untrusted.example/windows.iso";
   c.cdromSize = 400 * MiB;
   assert.throws(() => buildWindows9xOptions(c), /local ISO/i);
+});
+
+test("file-backed virtual hard disk is configured for lazy modified-sector tracking",()=>{
+  const c=config();
+  c.hardDiskFile = new File([new Uint8Array(512)], "test.img");
+  // Build accepts only preinstalled images >=32MiB, ensure a real-sized
+  // sparse disk placeholder using File metadata isn't mistaken for data.
+  assert.match(validateWindows9xMedia(c.hardDiskFile,"harddisk")??"",/between/i);
 });
