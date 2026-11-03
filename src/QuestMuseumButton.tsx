@@ -8,10 +8,11 @@ import {
 interface Props {
   selected: MuseumStationId;
   onEnter: (id: MuseumStationId) => boolean;
+  compact?: boolean;
 }
 
 /** Explicit action only: XR permission/session starts directly from a click. */
-export default function QuestMuseumButton({ selected, onEnter }: Props) {
+export default function QuestMuseumButton({ selected, onEnter, compact = false }: Props) {
   const [supported, setSupported] = useState<"checking" | "yes" | "no">("checking");
   const [state, setState] = useState<"idle" | "requesting" | "active">("idle");
   const [message, setMessage] = useState("Quest Browser: open the museum in actual immersive VR.");
@@ -79,14 +80,14 @@ export default function QuestMuseumButton({ selected, onEnter }: Props) {
   }
 
   return (
-    <div className="quest-museum-entry">
+    <div className={"quest-museum-entry" + (compact ? " quest-entry-compact" : "")}>
       <button type="button" className="quest-enter-vr"
         disabled={supported !== "yes" || state === "requesting"}
         onClick={state === "active" ? stop : start}
         aria-label={state === "active" ? "Exit Quest immersive VR" : "Enter Quest 3 immersive VR museum"}>
         {state === "active" ? "■ EXIT QUEST VR" : state === "requesting" ? "◌ STARTING VR..." : "◈ ENTER QUEST 3 VR"}
       </button>
-      <p className="quest-vr-status" role="status" aria-live="polite">
+      <p className="quest-vr-status" role="status" aria-live="polite" title={message}>
         {supported === "checking" ? "Checking for immersive WebXR support..." :
           supported === "no" ?
           "Immersive VR unavailable here. Open this HTTPS site inside Meta Quest Browser, or continue using the regular Time Hall." :
