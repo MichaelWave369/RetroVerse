@@ -48,6 +48,22 @@ To export your own game progress, first save **inside the game**, click the cabi
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
 
+## Rung 17: In-headset inspection + read-only local CRT preview
+
+This rung expands the Quest 3 **native immersive Time Hall** with a calmer, two-stage VR interaction and a live, local display preview for the current running v86 computer.
+
+- **First controller trigger:** open a larger historical exhibit plaque at a comfortable head-height distance **while staying in VR**. Inspect the current machine and its host information without leaving the headset. The plaque automatically closes after ten seconds or when the visitor moves to a different exhibit.
+- **Second trigger on the same exhibit within ten seconds:** intentionally exit immersive VR and enter the normal RetroVerse browser computer station. This adds an explicit inspection step before leaving VR. The Quest system menu continues to exit VR without opening a station.
+- **Live CRT preview, where technically permitted:** When the visitor already has an active DOS or Windows 95/98 **local v86 session** running in RetroVerse, the corresponding VR exhibit displays a real, read-only copy of its current screen. For graphical VGA mode this is captured from the same-origin emulator canvas; for DOS text mode the rendered text is reconstructed without using `innerHTML`. Source capture is bounded to 640×480 and approximately 2.9 updates/second to reduce Quest GPU/CPU load.
+- **No capture of remote emulator frames:** The Macintosh (Infinite Mac), original PC/XT (PCjs), Commodore 64 (C64 READY), remote DOS game cabinet, and ScummVM portals are **not** mirrored from cross-origin iframes. We do not bypass browser security controls, request tab/screen sharing or upload personal media.
+- **No misleading virtual keyboard claims:** The preview is **read only**. This rung does not send keypresses or mouse events into Windows/DOS from Quest controllers, and it does not boot new emulator sessions inside VR. The 2D stations remain the place for real guest interaction and media import.
+- **Active-machine preservation:** Selecting the *same* DOS station through the Time Hall is now allowed even while its emulator runs; trying to switch to another machine continues to require shutting down the active DOS session. Windows 9x keeps its existing export warning before switching away.
+- **Performance:** The VR scene only renders architectural bays near the current exhibit instead of drawing all nine at once. Dynamic textures and the XR rendering resources are released when the immersive session ends.
+
+**Manual Quest test:** Boot FreeDOS on the DOS station first. While the guest is running, open **Explore Time Hall** and **Enter Quest 3 VR**. Navigate to the DOS exhibit, and check whether the small read-only CRT preview updates. Trigger once to show an enlarged plaque, trigger again within ten seconds to return to the live DOS station, and verify that its running session is not destroyed. Repeat with an expendable, legally obtained Windows 9x image where available. Test Quest Browser controller input and clear XR exits on both headsets. Actual in-headset drawing and local guest capture have **not** been validated by automated CI.
+
+**Automated coverage:** Four new tests verify the local-only capture allowlist, bounded/sanitized DOS text rows, the first-trigger inspect and second-trigger exit logic, and timeout/reset behavior. TypeScript, the full unit suite and Vite production build run in CI.
+
 ## Rung 16: Quest 3 native immersive WebXR museum
 
 The optional **Time Hall** now offers **ENTER QUEST 3 VR**, a true native WebXR `immersive-vr` experience running in Meta Quest Browser and other compatible secure-context headset browsers. This is a self-hosted **stereoscopic WebGL2 museum corridor** built with native WebXR, locally generated geometry and canvas-based exhibit plaques. It uses **no new npm dependencies, third-party 3D engine, copyrighted computer art, external CDN or ROM images**.
@@ -231,7 +247,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 14. **Windows download verification:** compare an actual browser-downloaded updated image byte-for-byte and select a verified image for next boot.
 15. **Time Hall museum:** optional CSS-perspective nine-exhibit history corridor, keyboard navigation, portable screen-first layout and browser-local visit stamps.
 16. **Quest WebXR museum:** native immersive stereo WebGL2 gallery and thumbstick/trigger exhibit transitions on supported headsets, without shipping proprietary ROMs.
-17. **Future shared XR:** Quest 3 co-presence, user-calibrated locomotion, controller-ray selection, and separately governed live emulator surfaces.
+17. **VR exhibit inspection:** first-trigger large in-world plaque, second-trigger portal, and read-only same-origin DOS/Windows CRT preview.
+18. **Future shared XR:** tracked controller-ray UI, Quest 3 co-presence, and separately governed interactive emulator surfaces.
 
 ## Licensing and safety
 

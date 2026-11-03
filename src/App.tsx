@@ -239,7 +239,7 @@ export default function App() {
         !window.confirm("Switch machines and power off Windows 9x? Export and verify any changed guest disk first. Continue?")) {
       return false;
     }
-    if (on) {
+    if (on && next !== station) {
       setStatusMessage("Turn off the DOS PC before entering another museum room.");
       return false;
     }
@@ -419,6 +419,7 @@ export default function App() {
     </div>
       {timeHallOpen && <MuseumWalk
         activeStation={station}
+        liveGuest={station === "dos" && on ? "dos" : station === "win9x" && win9xActive ? "win9x" : null}
         visited={visitedExhibits}
         onEnter={id => {
           const accepted = chooseStation(id);
