@@ -257,6 +257,7 @@ export default function App() {
   }
 
   return (
+    <>
     <div className="app">
       <header className="topbar">
         <a className="brand" href={import.meta.env.BASE_URL} aria-label="RetroVerse home">
@@ -428,5 +429,6 @@ export default function App() {
         onClose={() => setTimeHallOpen(false)}
         onResetVisits={clearVisitStamps}
       />}
+    </>
   );
 }
