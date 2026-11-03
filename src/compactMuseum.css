@@ -10,7 +10,7 @@
 .hero p{font-size:12px;line-height:1.35;margin:0;max-width:390px}
 .museum .section-head{margin-bottom:7px}
 .section-head{padding-bottom:8px;margin-bottom:10px}
-.stations{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
+.stations{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:7px}
 .station{min-height:53px;text-align:center;align-items:center;justify-content:center;padding:9px 7px;border-radius:4px;transition:border-color .15s,background .15s}
 .station:hover{transform:none}
 .station strong{font-size:11px;line-height:1.24;letter-spacing:0}

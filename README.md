@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Eight museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Nine museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Windows 95/98, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -47,6 +47,20 @@ The DOS Game Cabinet uses [js-dos v8 custom file-system save hooks](https://js-d
 To export your own game progress, first save **inside the game**, click the cabinet **SAVE** control to persist the changed files, then choose **EXPORT PROGRESS**. This downloads a standalone versioned RetroVerse ZIP with a checksum-verified file-system-change bundle (not an emulator snapshot). To restore, select the same owned .jsdos game, choose **RESTORE PROGRESS**, and import the ZIP. The app checks archive integrity and the matching SHA-256 bundle identity, asks permission before replacing stored changes, and stops a running player **before** writing a replacement. Start the exact same game again to load the imported files.
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
+
+## Rung 12: Windows 95/98 via first-party v86 (bring your own disk)
+
+The ninth station runs a real browser-local Windows 9x-compatible virtual PC using the v86 engine already shipped in RetroVerse. No Microsoft Windows, installer media or product keys are included. The station displays a clearly marked decorative standby screen until the visitor starts the real emulator.
+
+- Choose Windows 95 or Windows 98. The upstream v86 guide recommends Windows 95 OSR2-family or Windows 98 Second Edition.
+- Bring an already bootable, preinstalled and legally usable raw hard disk: IMG, IMA, RAW or BIN, 32 MiB to 2 GiB, sector-aligned. VHD, VDI and QCOW2 containers are not supported. The disk is addressed through an origin-local blob URL with asynchronous HTTP Range requests, instead of reading the full multi-gigabyte file into JS memory. Browser Range support can vary; up-to-date Chrome or Edge is recommended.
+- Attach an optional boot floppy or installation ISO, and exchange them with machine controls after boot. Windows Setup may need extra drivers, manual partitioning and a lengthy process; preinstalled guest media are recommended.
+- Select 32, 64 or 128 MiB of RAM, and use power, pause/resume, reboot, fullscreen or Ctrl+Alt+Del. Existing open SeaBIOS/v86 WASM assets run locally, without any guest network relay.
+- Switching museum stations while a Windows guest is active prompts before shutting it down.
+
+**Data-loss warning:** This first rung does NOT save/restore virtual hard-disk changes. The selected source image is never overwritten; writes performed inside the virtual guest may disappear when powered off or reloaded. Do not trust this for lasting installs, documents, or games until disk-overlay export/restore has been independently implemented and tested. v86 CPU state snapshots alone do not automatically back up disk changes.
+
+More information: https://github.com/copy/v86/blob/master/docs/windows-9x.md (official Windows 9x guest preparation guidance). The Windows installation and license remain the user's responsibility. Automated tests verify app config and media validation; live Windows boot still requires manual testing with an authorized guest image.
 
 ## Rung 11: Original IBM PC/XT 8088 room
 
@@ -148,7 +162,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 9. **Macintosh 68k:** user-initiated official Infinite Mac embed with System 6 and 7 presets.
 10. **Commodore 64:** independent real C64 READY browser emulator portal, optional experimental embed, user-supplied ROMs and licensed media. Future: first-party runtime after GPL and COOP/COEP review.
 11. **IBM PC/XT 8088:** a real PCjs-hosted IBM 5150/5160 hardware emulator portal, with four presets and an optional experimental embed. Future: independently hosted emulator after media and licensing reviews.
-12. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+12. **Windows 95/98:** first-party v86 Windows 9x PC with visitor-owned raw disk, optional floppies and ISO, and temporary session controls. Future: persistent virtual-disk delta export/restore.
+13. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
 ## Licensing and safety
 
