@@ -1,0 +1,66 @@
+/* Compact museum chrome: the computer display appears near the top of the page. */
+.topbar{height:54px}
+.brand{gap:9px}
+.brand-symbol{font-size:33px}
+.brand b{font-size:19px}
+.brand small{font-size:8px;margin-top:4px}
+.hero{padding:14px 0 9px;max-width:none;display:flex;align-items:center;gap:18px;justify-content:space-between}
+.hero .eyebrow,.hero-stats{display:none}
+.hero h1{font-size:clamp(24px,2.5vw,36px);line-height:1.1;letter-spacing:-.05em;margin:0;white-space:nowrap}
+.hero p{font-size:12px;line-height:1.35;margin:0;max-width:390px}
+.museum .section-head{margin-bottom:7px}
+.section-head{padding-bottom:8px;margin-bottom:10px}
+.stations{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.station{min-height:53px;text-align:center;align-items:center;justify-content:center;padding:9px 7px;border-radius:4px;transition:border-color .15s,background .15s}
+.station:hover{transform:none}
+.station strong{font-size:11px;line-height:1.24;letter-spacing:0}
+.station-number,.station-icon,.station-description,.station-tag{display:none}
+.station.selected{background:#254236;border-color:#d7f68c}
+.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room{margin-top:12px}
+#computer-stage{scroll-margin-top:10px}
+.tandy-head,.mac-intro,.amiga-intro,.adventure-intro{padding:7px 0 12px;margin:0;gap:16px}
+.tandy-head h2,.mac-intro h2,.amiga-intro h2,.adventure-intro h2{font-size:clamp(24px,3.4vw,42px);margin:3px 0 5px}
+.tandy-head .eyebrow,.mac-intro .eyebrow,.adventure-intro .eyebrow,.amiga-intro .eyebrow{display:none}
+.tandy-head p,.mac-intro p,.amiga-intro p,.adventure-intro p{font-size:11px;line-height:1.35;margin:4px 0;max-width:840px}
+.tandy-head .tandy-caveat,.mac-intro .mac-disclaimer,.amiga-intro .amiga-notice{font-size:10px!important;line-height:1.35}
+.tandy-plate,.mac-art,.amiga-plate,.adventure-sign{display:none}
+@media(max-width:1100px){.stations{display:flex;overflow-x:auto;gap:7px;padding-bottom:7px;scroll-snap-type:x proximity;scrollbar-width:thin}.station{flex:0 0 148px;min-height:46px;scroll-snap-align:start}.hero p{display:none}}
+@media(max-width:710px){.topbar{height:51px}.hero{padding:11px 0 6px}.hero h1{font-size:clamp(20px,5.5vw,28px)}.station{flex-basis:136px;min-height:42px;padding:8px}.station strong{font-size:10px}.section-head{font-size:10px}.lab,.cabinet-room,.amiga-room,.adventure-room,.tandy-room,.mac-room,.c64-room{margin-top:11px}.desktop{padding:11px 8px}}
+/* Rung 10: C64 station. The provider may disallow embedded shared-memory use. */
+.c64-room{min-width:0}
+.c64-lab{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(275px,1fr);gap:15px}
+.c64-screen-shell{padding:14px;background:linear-gradient(155deg,#b9ae92,#888876);border:2px solid #d4c7a9;border-radius:12px;min-width:0;color:#1f2b24}
+.c64-screen-top,.c64-monitor-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font:10px "DM Mono",monospace;color:#233b32}
+.c64-screen-top{padding:3px 5px 14px}
+.c64-led{display:inline-block;vertical-align:middle;height:7px;width:7px;border-radius:50%;background:#bdd889;box-shadow:0 0 10px #b7e67c;margin-right:6px}
+.c64-crt{position:relative;background:#232854;border:10px solid #30362f;border-radius:13px;aspect-ratio:4/3;min-height:350px;overflow:hidden}
+.c64-crt iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#29358c}
+.c64-idle{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;background:#4945a1;padding:22px}
+.c64-basic{width:100%;max-width:360px;background:#7779cc;color:#f2f5e7;padding:15px;font:clamp(10px,1.3vw,17px)/1.6 "Courier New",monospace;box-shadow:0 0 0 15px #4945a1}
+.c64-basic p{margin:0 0 8px}.c64-basic span{animation:c64-blink 1.1s steps(1) infinite}
+@keyframes c64-blink{50%{opacity:0}}
+.c64-idle-notice{font:9px "DM Mono",monospace;color:#dbe2ff;text-align:center}
+.c64-monitor-footer{padding:13px 5px 0}
+.c64-monitor-footer>div{display:flex;gap:7px}
+.c64-monitor-footer button{background:#d6cfb7;border:1px solid #7d826c;padding:9px 11px;font:10px "DM Mono",monospace;color:#25362c}
+.c64-monitor-footer button:disabled{opacity:.45}
+.c64-console{min-width:0;background:#1b332e;padding:24px;border:1px solid #50715a}
+.c64-primary,.c64-secondary,.c64-guide{display:block;width:100%;padding:14px 10px;text-align:center;text-decoration:none;font:11px "DM Mono",monospace}
+.c64-primary{background:#d2f492;color:#1a2f26;border:1px solid #def9b3}
+.c64-secondary{background:#2e4a3a;color:#d6e9c3;border:1px solid #688467;margin:11px 0}
+.c64-guide{background:#243f36;color:#e0f3c8;border:1px solid #657f65;margin:13px 0}
+.c64-explainer,.c64-media-hint,.c64-license-note{font-size:12px;line-height:1.6;color:#acbfae}
+.c64-roms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.c64-roms>div{background:#173128;border:1px solid #3c654b;padding:11px}
+.c64-roms strong{display:block;color:#e1f4c4;font-size:12px}
+.c64-roms span{font:9px "DM Mono",monospace;color:#aac1aa}
+.c64-information{margin-top:35px}
+.c64-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}
+.c64-facts>div{padding:20px;border:1px solid #466b51;background:#1d362e}
+.c64-facts b{font:10px "DM Mono",monospace;color:#d4f59c}
+.c64-facts strong{display:block;font-size:25px;margin:12px 0}
+.c64-facts p{font-size:12px;color:#b5c9b6;line-height:1.55}
+.c64-license-note a{color:#d6f293}
+@media(max-width:1010px){.c64-lab{grid-template-columns:1fr}}
+@media(max-width:680px){.c64-screen-shell{padding:8px}.c64-crt{border-width:6px;min-height:270px}.c64-facts{grid-template-columns:1fr}.c64-console{padding:18px}.c64-roms{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.c64-basic span{animation:none}}

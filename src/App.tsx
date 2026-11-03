@@ -6,10 +6,11 @@ import AmigaRoom from "./AmigaRoom";
 import AdventureRoom from "./AdventureRoom";
 import TandyRoom from "./TandyRoom";
 import MacintoshRoom from "./MacintoshRoom";
+import C64Room from "./C64Room";
 import type { MediaType, ProfileId } from "./boot";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
-type Station = "dos" | "cabinet" | "tandy" | "mac" | "amiga" | "adventures";
+type Station = "dos" | "cabinet" | "tandy" | "mac" | "c64" | "amiga" | "adventures";
 
 const MAX_LOCAL_MEDIA_BYTES = 256 * 1024 * 1024;
 
@@ -18,6 +19,7 @@ const stations: { id: Station; name: string; tag: string; description: string }[
   { id: "cabinet", name: "DOS GAME CABINET", tag: "PLAYABLE RUNG 02", description: "Run your own DOS game bundles with js-dos." },
   { id: "tandy", name: "TANDY 1000 SL/2", tag: "TANDY-COMPATIBLE · RUNG 08", description: "Explore Tandy graphics and sound; load your 720 KB DOS floppies." },
   { id: "mac", name: "MACINTOSH 68K", tag: "OFFICIAL WEB EMBED · RUNG 09", description: "Boot a Macintosh Plus in a real independently hosted emulator." },
+  { id: "c64", name: "COMMODORE 64", tag: "REMOTE C64 READY · RUNG 10", description: "Open a real Commodore 64 emulator using your own ROMs." },
   { id: "amiga", name: "AMIGA WORKBENCH", tag: "RUNG 03 · ROM REQUIRED", description: "Real Amiga emulation using your Kickstart and ADF disks." },
   { id: "adventures", name: "SCUMM ADVENTURES", tag: "WEB PORTAL · RUNG 04", description: "Launch the real browser ScummVM demo and explore classic adventures." },
 ];
@@ -220,6 +222,14 @@ export default function App() {
       return;
     }
     setStation(next);
+    // After selecting a machine, put its screen at the top of the viewport.
+    // Keep the initial page load at the top so navigation remains discoverable.
+    window.requestAnimationFrame(() => {
+      document.getElementById("computer-stage")?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        block: "start",
+      });
+    });
   }
 
   return (
@@ -235,9 +245,9 @@ export default function App() {
       <main>
         <section className="hero">
           <div className="eyebrow"><span className="small-square" /> THE LIVING COMPUTER MUSEUM <span className="hero-rule" /> EST. 2026</div>
-          <h1>YOUR TICKET<br />TO <em>YESTERDAY.</em></h1>
+          <h1>Φ RETRO<em>VERSE.</em></h1>
           <p>Real machines. Real boot sequences. Real memories. Step inside decades of computing history, powered entirely by your browser.</p>
-          <div className="hero-stats"><span><b>06</b> MUSEUM STATIONS</span><span><b>05</b> EMULATOR EXPERIENCES</span><span><b>100%</b> BROWSER-BASED</span></div>
+          <div className="hero-stats"><span><b>07</b> MUSEUM STATIONS</span><span><b>06</b> EMULATOR EXPERIENCES</span><span><b>100%</b> BROWSER-BASED</span></div>
         </section>
 
         <section className="museum" aria-label="Computer stations">
@@ -252,15 +262,16 @@ export default function App() {
                 aria-pressed={station === item.id}
               >
                 <span className="station-number">0{index + 1} / 0{stations.length}</span>
-                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "cabinet" ? "◈" : item.id === "tandy" ? "▥" : item.id === "mac" ? "◉" : item.id === "amiga" ? "⌘" : "▤"}</span>
+                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "cabinet" ? "◈" : item.id === "tandy" ? "▥" : item.id === "mac" ? "◉" : item.id === "c64" ? "▦" : item.id === "amiga" ? "⌘" : "▤"}</span>
                 <strong>{item.name}</strong>
                 <span className="station-description">{item.description}</span>
-                <span className={"station-tag" + ((item.id === "dos" || item.id === "cabinet" || item.id === "tandy" || item.id === "mac" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
+                <span className={"station-tag" + ((item.id === "dos" || item.id === "cabinet" || item.id === "tandy" || item.id === "mac" || item.id === "c64" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
               </button>
             ))}
           </div>
         </section>
 
+        <div id="computer-stage" className="computer-stage">
         {station === "dos" ? (
           <section className="lab" aria-label="IBM PC emulator">
             <div className="section-head"><span>02 / THE MACHINE ROOM</span><span className="section-note">IBM PC COMPATIBLE / REAL X86 EMULATION</span></div>
@@ -356,15 +367,18 @@ export default function App() {
           <TandyRoom onGoToPc={() => chooseStation("dos")} />
         ) : station === "mac" ? (
           <MacintoshRoom />
+        ) : station === "c64" ? (
+          <C64Room />
         ) : station === "amiga" ? (
           <AmigaRoom />
         ) : (
           <AdventureRoom />
         )}
+        </div>
 
         <section className="disclaimer">
           <span className="disclaimer-mark">✳</span>
-          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not include Microsoft DOS, Tandy DeskMate ROMs, Apple Macintosh firmware/system images, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Tandy compatibility uses DOSBox rather than original SL/2 firmware. Import only media you are authorized to use; local images stay on your device. No guest networking is enabled by default.</p></div>
+          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not include Microsoft DOS, Tandy DeskMate ROMs, Commodore 64 KERNAL/BASIC/CHARGEN ROMs, Apple Macintosh firmware/system images, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Tandy compatibility uses DOSBox rather than original SL/2 firmware. Import only media you are authorized to use; local images stay on your device. No guest networking is enabled by default.</p></div>
         </section>
       </main>
       <footer><span>Φ369 LABS / ENTER THE FIELD</span><span><a href="https://github.com/MichaelWave369/RetroVerse" target="_blank" rel="noreferrer">SOURCE ON GITHUB ↗</a> &nbsp; · &nbsp; OPEN SOURCE · LOCAL FIRST</span></footer>

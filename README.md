@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Six museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Seven museum stations: DOS PC, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -47,6 +47,18 @@ The DOS Game Cabinet uses [js-dos v8 custom file-system save hooks](https://js-d
 To export your own game progress, first save **inside the game**, click the cabinet **SAVE** control to persist the changed files, then choose **EXPORT PROGRESS**. This downloads a standalone versioned RetroVerse ZIP with a checksum-verified file-system-change bundle (not an emulator snapshot). To restore, select the same owned .jsdos game, choose **RESTORE PROGRESS**, and import the ZIP. The app checks archive integrity and the matching SHA-256 bundle identity, asks permission before replacing stored changes, and stops a running player **before** writing a replacement. Start the exact same game again to load the imported files.
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
+
+## Rung 10: Screen-first compact navigation and Commodore 64
+
+**Screen-first navigation:** The old 86px header, giant hero, and 218px machine-selector cards made users scroll through a landing page before they could see the actual emulator. Rung 10 replaces these with a small header, a compact hero and a single horizontal row of machine buttons, responsive to narrow mobile screens by horizontal scrolling. Switching stations automatically scrolls the active workstation into view. The page does not auto-scroll on first load. The workstation layout and media controls are otherwise retained.
+
+**Commodore 64 station:** Provides a clear full-page launch to the real [C64 READY](https://c64ready.com/) 6510/VIC-II/SID browser emulator, with an **optional experimental iframe** that is only loaded on visitor request. The emulator's own features include keyboard/joystick input, user-supplied disks/tapes/programs, audio and local save states. It requires legally obtained ROMs: KERNAL (8 KiB), BASIC (8 KiB), CHARGEN (4 KiB), with 1541 DOS (16 KiB) optional for true-drive emulation. The [setup guide](https://c64ready.com/docs/getting-started) explains import from legal ROM files or a VICE folder.
+
+**Technical limitation:** C64 READY relies on SharedArrayBuffer with cross-origin isolation. Its host sets COOP and COEP headers; embedding into an unrelated GitHub Pages origin **may fail**. RetroVerse therefore recommends the full-page link as the reliable path. Loading an iframe is not proof of actual guest boot. The provider remains separate and independently hosted, and retains ROM/media/storage responsibility.
+
+**Licensing and data:** C64 READY is [GPL-3.0-or-later](https://github.com/mortyeriksen/c64ready). RetroVerse only links to or optionally embeds it and does not bundle emulator code, copyrighted ROMs, game images or save states. ROMs and saves entered into the provider's UI are managed by the provider's browser origin, not our Game Vault.
+
+**Acceptance:** Run the existing automated ZIP/FAT12/ROM-related unit tests and the new provider URL tests; typecheck and build must pass. After merge and Pages deployment, confirm the homepage screen is visible quickly on desktop/mobile, selectors remain keyboard accessible, and the official C64 full-page player starts after users import their authorized ROMs. Try optional iframe to determine actual browser embedding viability.
 
 ## Rung 9: Macintosh Plus / System 6 via Infinite Mac
 
@@ -121,7 +133,7 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 7. **Save progress:** SHA-256-bound DOS file-system deltas with independent verified ZIP export/import. Future: backward-compatible save migrations and quick-state support.
 8. **Tandy SL/2:** compatible DOSBox Tandy graphics/audio, historic 720 KiB disk extraction.
 9. **Macintosh 68k:** user-initiated official Infinite Mac embed with System 6 and 7 presets.
-10. **Commodore 64:** evaluate a faithful browser C64 core and authorized user-supplied ROMs.
+10. **Commodore 64:** independent real C64 READY browser emulator portal, optional experimental embed, user-supplied ROMs and licensed media. Future: first-party runtime after GPL and COOP/COEP review.
 11. **IBM PC/XT 8088:** evaluate PCjs for more faithful original XT/MDA/CGA support than v86.
 12. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
 
