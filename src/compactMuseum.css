@@ -64,3 +64,10 @@
 @media(max-width:1010px){.c64-lab{grid-template-columns:1fr}}
 @media(max-width:680px){.c64-screen-shell{padding:8px}.c64-crt{border-width:6px;min-height:270px}.c64-facts{grid-template-columns:1fr}.c64-console{padding:18px}.c64-roms{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.c64-basic span{animation:none}}
+
+/* Optional Time Hall control. Fits in the compact station heading; no
+   hero or full-height room is inserted above the active emulator. */
+.museum-open-button{flex:none;min-height:31px;padding:7px 11px;color:#d8f4a4;background:#254238;border:1px solid #749578;border-radius:3px;font:10px "DM Mono",monospace;letter-spacing:.035em}
+.museum-open-button:hover{background:#345344;border-color:#d7f496}
+.museum-open-button span{color:#a9c4ac;font-size:9px;margin-left:7px}
+@media(max-width:700px){.museum-open-button{font-size:9px;padding:6px 8px}.museum-open-button span{display:none}}

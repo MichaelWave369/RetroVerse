@@ -8,6 +8,7 @@ import "./pcxt.css";
 import "./windows9x.css";
 import "./windows9xExport.css";
 import "./windows9xVerify.css";
+import "./museumWalk.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("RetroVerse mount point not found");

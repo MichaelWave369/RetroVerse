@@ -9,24 +9,16 @@ import MacintoshRoom from "./MacintoshRoom";
 import C64Room from "./C64Room";
 import PcXtRoom from "./PcXtRoom";
 import Windows9xRoom from "./Windows9xRoom";
+import MuseumWalk from "./MuseumWalk";
+import { museumExhibits as stations, parseMuseumVisits, type MuseumStationId } from "./museumCollection";
 import type { MediaType, ProfileId } from "./boot";
 
 type Status = "off" | "booting" | "running" | "paused" | "error";
-type Station = "dos" | "xt" | "cabinet" | "tandy" | "win9x" | "mac" | "c64" | "amiga" | "adventures";
+type Station = MuseumStationId;
 
 const MAX_LOCAL_MEDIA_BYTES = 256 * 1024 * 1024;
 
-const stations: { id: Station; name: string; tag: string; description: string }[] = [
-  { id: "dos", name: "IBM PC / DOS", tag: "PLAYABLE RUNG 01", description: "Boot authentic PC hardware in your browser." },
-  { id: "xt", name: "IBM PC / XT", tag: "PCJS HARDWARE · RUNG 11", description: "Simulate IBM 8088 originals with monochrome or CGA graphics." },
-  { id: "cabinet", name: "DOS GAME CABINET", tag: "PLAYABLE RUNG 02", description: "Run your own DOS game bundles with js-dos." },
-  { id: "tandy", name: "TANDY 1000 SL/2", tag: "TANDY-COMPATIBLE · RUNG 08", description: "Explore Tandy graphics and sound; load your 720 KB DOS floppies." },
-  { id: "win9x", name: "WINDOWS 95 / 98", tag: "LOCAL V86 · RUNG 12", description: "Boot your own Windows 9x raw disk on a browser-local virtual PC." },
-  { id: "mac", name: "MACINTOSH 68K", tag: "OFFICIAL WEB EMBED · RUNG 09", description: "Boot a Macintosh Plus in a real independently hosted emulator." },
-  { id: "c64", name: "COMMODORE 64", tag: "REMOTE C64 READY · RUNG 10", description: "Open a real Commodore 64 emulator using your own ROMs." },
-  { id: "amiga", name: "AMIGA WORKBENCH", tag: "RUNG 03 · ROM REQUIRED", description: "Real Amiga emulation using your Kickstart and ADF disks." },
-  { id: "adventures", name: "SCUMM ADVENTURES", tag: "WEB PORTAL · RUNG 04", description: "Launch the real browser ScummVM demo and explore classic adventures." },
-];
+const MUSEUM_VISITS_KEY = "retroverse:timehall:visits:v1";
 
 function downloadBuffer(buffer: ArrayBuffer, fileName: string) {
   const url = URL.createObjectURL(new Blob([buffer], { type: "application/octet-stream" }));
@@ -52,6 +44,11 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [mediaLabel, setMediaLabel] = useState("No removable media inserted");
   const [win9xActive, setWin9xActive] = useState(false);
+  const [timeHallOpen, setTimeHallOpen] = useState(false);
+  const [visitedExhibits, setVisitedExhibits] = useState<MuseumStationId[]>(() => {
+    try { return parseMuseumVisits(window.localStorage.getItem(MUSEUM_VISITS_KEY)); }
+    catch { return []; } // Private browsing or disabled storage must not block the museum.
+  });
 
   const machine = useRef<V86 | null>(null);
   const screen = useRef<HTMLDivElement | null>(null);
@@ -221,16 +218,33 @@ export default function App() {
     }
   }
 
-  function chooseStation(next: Station) {
+  function stampExhibit(id: MuseumStationId) {
+    setVisitedExhibits(current => {
+      if (current.includes(id)) return current;
+      const next = [...current, id];
+      try { window.localStorage.setItem(MUSEUM_VISITS_KEY, JSON.stringify(next)); }
+      catch { /* Storage unavailable: stamps still work for this tab. */ }
+      return next;
+    });
+  }
+
+  function clearVisitStamps() {
+    setVisitedExhibits([]);
+    try { window.localStorage.removeItem(MUSEUM_VISITS_KEY); }
+    catch { /* Storage unavailable. */ }
+  }
+
+  function chooseStation(next: Station): boolean {
     if (station === "win9x" && win9xActive && next !== "win9x" &&
-        !window.confirm("Switch machines and shut down Windows 9x? Changes to its temporary virtual hard disk will not be exported.")) {
-      return;
+        !window.confirm("Switch machines and power off Windows 9x? Export and verify any changed guest disk first. Continue?")) {
+      return false;
     }
     if (on) {
       setStatusMessage("Turn off the DOS PC before entering another museum room.");
-      return;
+      return false;
     }
     setStation(next);
+    stampExhibit(next);
     // After selecting a machine, put its screen at the top of the viewport.
     // Keep the initial page load at the top so navigation remains discoverable.
     window.requestAnimationFrame(() => {
@@ -239,9 +253,11 @@ export default function App() {
         block: "start",
       });
     });
+    return true;
   }
 
   return (
+    <>
     <div className="app">
       <header className="topbar">
         <a className="brand" href={import.meta.env.BASE_URL} aria-label="RetroVerse home">
@@ -260,7 +276,12 @@ export default function App() {
         </section>
 
         <section className="museum" aria-label="Computer stations">
-          <div className="section-head"><span>01 / CHOOSE A MACHINE</span><span className="section-note">MORE COMPUTERS COMING SOON</span></div>
+          <div className="section-head"><span>01 / CHOOSE A MACHINE</span>
+            <button type="button" className="museum-open-button" onClick={() => setTimeHallOpen(true)}
+              aria-haspopup="dialog" aria-label="Explore the RetroVerse Time Hall museum">
+              ◈ EXPLORE TIME HALL <span aria-hidden="true">· {visitedExhibits.length}/9 STAMPS</span>
+            </button>
+          </div>
           <div className="stations">
             {stations.map((item, index) => (
               <button
@@ -396,5 +417,18 @@ export default function App() {
       </main>
       <footer><span>Φ369 LABS / ENTER THE FIELD</span><span><a href="https://github.com/MichaelWave369/RetroVerse" target="_blank" rel="noreferrer">SOURCE ON GITHUB ↗</a> &nbsp; · &nbsp; OPEN SOURCE · LOCAL FIRST</span></footer>
     </div>
+      {timeHallOpen && <MuseumWalk
+        activeStation={station}
+        visited={visitedExhibits}
+        onEnter={id => {
+          const accepted = chooseStation(id);
+          if (accepted) setTimeHallOpen(false);
+          else window.alert("Power off your active computer or cancel its pending session before entering another exhibit.");
+          return accepted;
+        }}
+        onClose={() => setTimeHallOpen(false)}
+        onResetVisits={clearVisitStamps}
+      />}
+    </>
   );
 }

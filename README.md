@@ -48,6 +48,20 @@ To export your own game progress, first save **inside the game**, click the cabi
 
 **Scope and limitations:** This is first-pass save-file portability, not DOSBox-X quick-state portability. Games must support saving files themselves. Save changes are capped at 64 MiB. It is not bundled with the Rung 6 ZIP of game cartridges, so carry both files. Local changes remain unencrypted in browser origin storage and can be deleted when clearing site data. The custom hook behavior requires live browser tests after deployment. Previous saves created by the js-dos default storage are **not migrated automatically**. The upstream Digger demonstration deliberately retains its existing save behavior to avoid disrupting established progress.
 
+## Rung 15: The Time Hall · optional explorable history gallery
+
+RetroVerse now includes an optional **Time Hall** museum experience. Select the small **EXPLORE TIME HALL** button next to the original compact machine tabs. The hall opens as a full-screen, accessible overlay, with a CSS perspective corridor, nine unique computer exhibits, period plaques, hardware-inspired visual displays and a chronological timeline. Select a door or press Left/Right arrows to walk between eras. **ENTER THIS COMPUTER** closes the hall and takes you straight to the real existing emulator station.
+
+**Screen-first default preserved:** The Time Hall is **closed by default**; no giant gallery is inserted ahead of the emulator. The compact station tabs stay usable and the computer display remains near the top of the page. Merely opening the hall does not launch, iframe, preload or contact any third-party emulator. Its hardware visuals are CSS illustrations, **not fake playable software** and not an actual walkable 3D/VR/WebXR engine.
+
+**Accessibility:** Keyboard controls (Left/Right to change exhibits, Tab/Shift+Tab inside the dialog, Escape to close), clickable previous/next doors, scrollable timeline for smaller screens, screen-reader labels, focus restoration, reduced-motion behavior and a focus-trapped modal. The time-hall gallery is implemented with local React/CSS and adds no large runtime dependency.
+
+**Exhibit stamps:** Entered station IDs are saved in browser-local `localStorage` at `retroverse:timehall:visits:v1`, with validation and de-duplication of stored IDs. The gallery displays visited counts and offers **RESET VISIT STAMPS** with confirmation. If storage is blocked, the museum still works and visit stamps persist for the current browser tab only. No analytics, cloud accounts or uploads.
+
+**Scope and honesty:** The historical timeline is an educational *curation*, not a literal model of hardware generations: for example, the DOS station is displayed as the 1990s DOS era despite using a later v86 x86 machine, while the original IBM PC/XT is correctly situated in 1981–83. Externally hosted, local and compatibility-based emulator experiences are labeled separately. Existing media/ROM/rights policies are unchanged. A real WebXR gallery with Quest 3 controls remains a separate future milestone.
+
+**QA:** Check the nine unique doors, chronological order, mobile horizontal timeline, visited stamps, navigation to every existing station, and focus handling. Switching from an active DOS/Windows guest still follows the existing safety checks before unmounting a live machine. The pure inventory and route model has five new automated tests; UI exploration needs manual browser testing after deployment.
+
 ## Rung 14: Verify your Windows 9x disk download and restore it
 
 After exporting an updated Windows 95/98 hard disk, RetroVerse can **verify the actual file downloaded by the browser** before you rely on it. This checks *every byte*, not merely the filename or file size, while loading at most two 4 MiB slices into RAM at once. No disk content is uploaded and no external backend is needed.
@@ -197,7 +211,8 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 12. **Windows 95/98:** real v86 guest with user-owned raw disks and optional floppy/ISO media.
 13. **Windows disk export:** save guest-written files by downloading a new updated raw image, guarded against incompatible v86 internals. Future: tested automatic, incremental backups.
 14. **Windows download verification:** compare an actual browser-downloaded updated image byte-for-byte and select a verified image for next boot.
-15. **Museum / XR:** browsable computer rooms connected with PhiCade and PhiOS XR.
+15. **Time Hall museum:** optional CSS-perspective nine-exhibit history corridor, keyboard navigation, portable screen-first layout and browser-local visit stamps.
+16. **Future XR museum:** real walkable WebXR rooms and Quest 3 control integration, using the existing emulator stations rather than duplicating their engines.
 
 ## Licensing and safety
 
