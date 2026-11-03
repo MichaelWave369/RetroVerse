@@ -5,6 +5,7 @@ import "./styles.css";
 import "./macintosh.css";
 import "./compactMuseum.css";
 import "./pcxt.css";
+import "./windows9x.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("RetroVerse mount point not found");
