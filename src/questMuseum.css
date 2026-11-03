@@ -8,3 +8,14 @@
 .quest-vr-disclosure{font:9px/1.6 "DM Mono",monospace;color:#a7c3b0;margin:0}
 .timehall-action-panel .quest-museum-entry p{display:block}
 @media(max-width:720px){.quest-museum-entry{padding:10px;gap:7px}.quest-enter-vr{padding:12px 9px;font-size:11px}.timehall-action-panel .quest-vr-disclosure{font-size:9px}}
+
+/* Always-visible VR entrance in the Time Hall title bar. The headset user
+   should never need to scroll through the exhibit just to start WebXR. */
+.timehall-header{gap:12px}
+.timehall-header-actions{min-width:0}
+.timehall-header .quest-entry-compact{width:218px;max-width:28vw;gap:2px;flex:none;padding:0;border:0;background:none;margin:0}
+.timehall-header .quest-entry-compact .quest-enter-vr{padding:10px 11px;font-size:10px;white-space:nowrap;min-width:0}
+.timehall-header .quest-entry-compact .quest-vr-status{font-size:8px;line-height:1.2;color:#b5d6b4;max-height:2.4em;overflow:hidden}
+.timehall-header .quest-entry-compact .quest-vr-disclosure{display:none}
+@media(max-width:880px){.timehall-header-actions>span{display:none}.timehall-header .quest-entry-compact{width:165px;max-width:40vw}.timehall-header .quest-entry-compact .quest-enter-vr{font-size:9px;padding:9px 4px}}
+@media(max-width:520px){.timehall-header{flex-wrap:wrap}.timehall-header-actions{width:100%;justify-content:space-between}.timehall-header .quest-entry-compact{width:min(280px,calc(100vw - 113px));max-width:none}.timehall-header .quest-entry-compact .quest-enter-vr{font-size:10px}.timehall-header .quest-entry-compact .quest-vr-status{max-height:2.4em}}
