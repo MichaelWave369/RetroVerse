@@ -21,7 +21,7 @@ test("only local in-page v86 stations are eligible for XR screen previews",()=>{
 
 test("text-only DOS CRT capture preserves bounded lines and strips control bytes",()=>{
   assert.deepEqual(normalizeCRTText("C:\\\\>DIR\r\nHELLO\u0000\u0007 WORLD\nREADY",10,3),[
-    "C:\\\\>DIR","HELLO WORLD","READY"
+    "C:\\\\>DIR","HELLO WORL","READY"
   ]);
   assert.deepEqual(normalizeCRTText("X".repeat(120),80,25),["X".repeat(80)]);
   assert.equal(normalizeCRTText(Array.from({length:50},(_,i)=>String(i)).join("\n")).length,25);
