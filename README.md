@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Ten museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, CoCo 3 BASIC workbench, Tandy 1000 SL/2 compatibility, Windows 95/98, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Ten museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, CoCo 3 (official XRoar Online + local BASIC), Tandy 1000 SL/2 compatibility, Windows 95/98, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -261,3 +261,7 @@ Developed as part of the Φ369 Labs open computing ecosystem.
 ## CoCo 3: the first-computer exhibit (2026)
 
 RetroVerse now also includes a distinct 1986 TRS-80 Color Computer 3 room, separate from the later Tandy 1000 SL/2. It has a CRT-themed, browser-local BASIC learning workbench with numbered programs, simple branching, source import/export, physical/on-screen keyboard and a Silpheed memory plaque. **It is an educational BASIC subset, not 6809/CoCo 3 hardware emulation, and it cannot execute cartridge ROMs.** Bring authorized firmware and game files to an independent real emulator such as [XRoar](https://www.6809.org.uk/xroar/). The local cartridge picker only inspects filename and size; no game/ROM media is shipped or uploaded. See [CoCo 3 exhibit guide](docs/coco3.md) for supported commands and QA.
+
+### Real CoCo 3 emulation: XRoar Online
+
+The CoCo 3 room now offers a verified official [XRoar Online](https://www.6809.org.uk/xroar/online/) browser emulator launch and an optional *experimental* third-party iframe with a dependable full-page fallback. XRoar emulates real 6809/GIME CoCo 3 hardware using a WebAssembly build. ROMs and games are **not** shipped by RetroVerse, nor uploaded to RetroVerse. The existing BASIC simulation stays available separately. See [CoCo 3 and upstream source build instructions](docs/coco3.md) and [XRoar's official Git repository](https://www.6809.org.uk/git/xroar.git). A helper script can attempt the upstream Emscripten build, but RetroVerse does **not** yet self-host XRoar binaries and the source build is not a CI requirement.
