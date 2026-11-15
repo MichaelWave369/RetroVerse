@@ -47,11 +47,11 @@ export const museumExhibits: readonly MuseumExhibit[] = [
     accent: "#f4bb8d",
   },
   {
-    id: "coco3", name: "TANDY COCO 3", tag: "BASIC WORKBENCH · 1986",
-    description: "Explore the Color Computer 3 in a local BASIC teaching console.",
+    id: "coco3", name: "TANDY COCO 3", tag: "XROAR ONLINE · LOCAL BASIC",
+    description: "Run official XRoar Online with your own ROMs, or learn BASIC locally.",
     year: 1986, period: "1986–1991", family: "TRS-80 COLOR COMPUTER 3",
-    engine: "RetroVerse BASIC subset · simulated", access: "compatible", emblem: "COCO",
-    plaque: "The 1986 Color Computer 3 was a 6809-based computer, distinct from the later x86 Tandy 1000 SL/2. This original browser-local BASIC learning workbench is not a real CoCo 3/6809 emulator and cannot run cartridge ROMs. Silpheed (1988) is commemorated, not distributed.",
+    engine: "XRoar Online · external WebAssembly; local BASIC subset", access: "external", emblem: "COCO",
+    plaque: "The 1986 Color Computer 3 was a 6809-based computer, distinct from the later x86 Tandy 1000 SL/2. Official XRoar Online offers real browser-based CoCo 3 emulation on the upstream site with user-supplied ROMs; RetroVerse also provides a local BASIC learning simulation, not hardware emulation. Silpheed (1988) is commemorated, not distributed.",
     accent: "#c5f39a",
   },
   {
