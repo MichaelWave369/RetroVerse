@@ -6,13 +6,13 @@ import {
 } from "../src/museumCollection";
 
 const stationIds = [
-  "dos", "xt", "cabinet", "tandy", "win9x", "mac", "c64", "amiga", "adventures"
+  "dos", "xt", "cabinet", "coco3", "tandy", "win9x", "mac", "c64", "amiga", "adventures"
 ];
 
-test("Time Hall and compact tabs have exactly the original nine unique machines", () => {
-  assert.equal(museumExhibits.length,9);
+test("Time Hall and compact tabs have exactly ten unique machines", () => {
+  assert.equal(museumExhibits.length,10);
   assert.deepEqual(new Set(museumExhibits.map(x=>x.id)),new Set(stationIds));
-  assert.equal(new Set(museumWalkOrder).size,9);
+  assert.equal(new Set(museumWalkOrder).size,10);
   assert.deepEqual(new Set(museumWalkOrder),new Set(stationIds));
   for(const exhibit of museumExhibits) {
     assert.ok(exhibit.name.trim());
@@ -31,6 +31,7 @@ test("historical route is chronological and uses known original eras", () => {
   assert.equal(museumWalkOrder[0],"xt");
   assert.equal(museumWalkOrder[museumWalkOrder.length-1],"win9x");
   assert.equal(museumExhibit("tandy").year,1988);
+  assert.equal(museumExhibit("coco3").year,1986);
   assert.equal(museumExhibit("c64").year,1982);
   assert.equal(museumExhibit("amiga").year,1985);
 });
@@ -59,5 +60,7 @@ test("remote and compatible exhibits honestly identify their host or limitation"
   assert.equal(museumExhibit("mac").access,"external");
   assert.equal(museumExhibit("c64").access,"external");
   assert.equal(museumExhibit("tandy").access,"compatible");
+  assert.equal(museumExhibit("coco3").access,"compatible");
+  assert.match(museumExhibit("coco3").plaque,/not a real CoCo 3/i);
   assert.match(museumExhibit("tandy").plaque,/not an exact Tandy/i);
 });
