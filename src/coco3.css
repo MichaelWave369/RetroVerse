@@ -1,0 +1,52 @@
+.coco-room{margin-top:12px;color:#dce8d2}
+.coco-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:9px 0 18px}
+.coco-heading h2{font-size:clamp(25px,3.8vw,44px);letter-spacing:-.04em;line-height:1.1;margin:4px 0 12px;color:#f5f4e6}
+.coco-heading h2 span{color:#c8ec91}
+.coco-heading p{font-size:12px;line-height:1.6;max-width:720px;margin:0;color:#a9bba9}
+.coco-kicker{font:10px 'DM Mono',monospace!important;letter-spacing:.13em;color:#c8ec91!important}
+.coco-specs{display:flex;flex-direction:column;gap:7px;flex-shrink:0;border-left:1px solid #56735d;padding:6px 0 6px 17px;font:11px 'DM Mono',monospace;color:#aabd9f}
+.coco-specs strong{color:#e0ecca}
+.coco-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:19px;align-items:start}
+.coco-machine{min-width:0;background:#172b25;border:1px solid #55745d;padding:15px}
+.coco-monitor{background:linear-gradient(155deg,#d4cfb9,#a5a390);padding:14px 17px 10px;border-radius:16px 16px 7px 7px;border:2px solid #e8e0ca;box-shadow:0 9px 0 #777966,0 18px 34px #0004;color:#344437}
+.coco-monitor-top,.coco-monitor-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;font:11px 'DM Mono',monospace;font-weight:700;letter-spacing:.07em}
+.coco-monitor-top{padding:0 4px 13px}
+.coco-led{width:9px;height:9px;background:#6c7463;border:1px solid #606c56;border-radius:50%}
+.coco-led.lit{background:#abed66;box-shadow:0 0 13px #8aff45}
+.coco-crt{position:relative;background:#081d12;border:11px solid #394b3c;border-radius:14px;min-height:350px;aspect-ratio:4/3;overflow:hidden}
+.coco-terminal{position:absolute;inset:0;overflow-y:auto;scrollbar-width:thin;padding:20px 18px;white-space:pre-wrap;overflow-wrap:anywhere;color:#b8ff9d;text-shadow:0 0 7px #8ae87985;font:clamp(11px,1.42vw,18px)/1.38 'Courier New',monospace;z-index:1}
+.coco-idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;color:#a8c6a3;font:12px 'DM Mono',monospace}
+.coco-idle span{font-size:64px;color:#86a88a}
+.coco-idle strong{letter-spacing:.2em}.coco-idle small{font-size:10px}
+.coco-scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(transparent 0 3px,#0003 3px 5px);z-index:2}
+.coco-monitor-footer{padding:14px 4px 2px;font-size:9px}
+.coco-monitor-footer button{cursor:pointer;background:#465d46;border:2px solid #273b28;color:#ecfad5;border-radius:6px;padding:10px;font:700 11px 'DM Mono',monospace}
+.coco-command{margin-top:23px}.coco-command label{display:block;color:#bfde96;font:10px 'DM Mono',monospace;margin-bottom:8px;letter-spacing:.1em}
+.coco-command>div{display:flex;align-items:center;gap:9px;padding:8px;background:#0c211b;border:1px solid #5e8960;color:#b9ee94}
+.coco-command input{min-width:0;flex:1;border:0;outline:0;background:none;color:#e5ffbf;font:14px 'Courier New',monospace}
+.coco-command input::placeholder{color:#719076}
+.coco-command button{background:#bbeb85;color:#15271e;border:0;padding:10px 13px;font:700 11px 'DM Mono',monospace;cursor:pointer}
+.coco-command button:disabled,.coco-keys button:disabled{cursor:not-allowed;opacity:.45}
+.coco-keys{margin-top:13px;display:flex;flex-direction:column;gap:5px}
+.coco-keyrow{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+.coco-keyrow button{flex:1;min-width:28px;min-height:34px;background:#e1dfcb;border:1px solid #8e9982;border-bottom:3px solid #909884;color:#213626;font:700 12px 'Courier New',monospace;cursor:pointer;border-radius:4px}
+.coco-keyrow button:hover:enabled{background:#baf18b}.coco-keyrow button:focus-visible{outline:3px solid #a4fc8c}
+.coco-keyrow-special button{font-size:10px;min-width:33px}.coco-keyrow-special button:first-child{flex:2.5}
+.coco-notice{margin:14px 0 0;color:#bfdfb2;background:#20382a;padding:11px 12px;font:11px/1.6 'DM Mono',monospace;min-height:38px}
+.coco-sidebar{display:flex;flex-direction:column;gap:12px;min-width:0}
+.coco-panel{background:#1a3228;border:1px solid #49694c;padding:19px}
+.coco-panel h3{color:#d3f19d;font:700 12px 'DM Mono',monospace;letter-spacing:.08em;margin:0 0 12px}
+.coco-panel p{font-size:12px;line-height:1.7;color:#b8c9b8;margin:0 0 13px}
+.coco-panel strong{color:#edf1dc}
+.coco-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.coco-actions button,.coco-inspect{border:1px solid #89a174;background:#304e36;color:#e6f2d0;padding:11px 9px;font:700 10px 'DM Mono',monospace;cursor:pointer}
+.coco-actions button:disabled{opacity:.45;cursor:not-allowed}
+.coco-actions button:hover:enabled,.coco-inspect:hover{background:#426448}
+.coco-fineprint{font-size:10px!important;color:#9cb29f!important;margin-bottom:0!important}
+.coco-memory{border-color:#b5a875}.coco-memory h3{color:#f1d89c}
+.coco-cartridge{height:96px;margin:13px 0;display:flex;align-items:center;justify-content:center;gap:18px;background:linear-gradient(180deg,#3a3f33,#222e28);border:3px solid #79816f;color:#dfe6d1;font:700 12px 'DM Mono',monospace;text-align:center}
+.coco-cartridge>div{font-size:42px}.coco-inspect{width:100%;margin-bottom:11px}
+.coco-external{display:block;text-decoration:none;text-align:center;background:#d3ec9d;color:#1e3324;padding:13px;font:700 11px 'DM Mono',monospace}
+.coco-external:hover{background:#edffbd}
+@media(max-width:900px){.coco-layout{grid-template-columns:minmax(0,1fr)}.coco-heading{align-items:flex-start}.coco-crt{min-height:280px}.coco-terminal{font-size:clamp(12px,2vw,18px)}}
+@media(max-width:580px){.coco-heading{display:block}.coco-specs{display:none}.coco-machine{padding:8px}.coco-monitor{padding:9px}.coco-crt{min-height:230px;border-width:7px}.coco-terminal{padding:13px;font-size:12px}.coco-keyrow{gap:3px}.coco-keyrow button{min-width:22px;padding:5px 2px;font-size:11px}.coco-keyrow-special button{min-width:28px;flex:1 1 15%}.coco-command button{padding:9px 7px}}
