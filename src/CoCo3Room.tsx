@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { cocoSampleProgram, executeCoCoCommand, exportCoCoProgram, importCoCoProgram, newCoCoState, type CoCoState } from "./cocoBasic";
+import { COCO3_FIRMWARE, XROAR_HOME_URL, XROAR_MANUAL_URL, XROAR_ONLINE_URL, XROAR_SOURCE_URL } from "./xroarProvider";
 
 const keyboardRows = ["1234567890","QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
 /** Nostalgia station, explicitly NOT original 6809/ROM emulation. */
 export default function CoCo3Room() {
   const [powered,setPowered]=useState(false);
+  const [inlineXRoar,setInlineXRoar]=useState(false);
   const [machine,setMachine]=useState<CoCoState>(()=>newCoCoState());
   const [input,setInput]=useState("");
   const [notice,setNotice]=useState("Power on to open the local BASIC workbench.");
@@ -79,6 +81,27 @@ export default function CoCo3Room() {
       </div>
       <div className="coco-specs"><strong>RADIO SHACK / TANDY</strong><span>1986</span><span>MOTOROLA 6809E</span><span>128 KB BASE RAM</span></div>
     </div>
+    <section className="coco-xroar" aria-label="Real CoCo 3 hardware emulator">
+      <div className="coco-xroar-heading">
+        <div>
+          <span className="coco-xroar-eyebrow">REAL 6809 HARDWARE EMULATION · OFFICIAL PROVIDER</span>
+          <h3>RUN A REAL COCO 3 IN YOUR BROWSER</h3>
+          <p>XRoar Online runs a real WebAssembly CoCo 3 emulator. It is hosted by XRoar's developer, independently of RetroVerse. Your files are selected inside XRoar, not sent to RetroVerse.</p>
+        </div>
+        <div className="coco-xroar-actions">
+          <a href={XROAR_ONLINE_URL} target="_blank" rel="noopener noreferrer">OPEN XROAR ONLINE ↗</a>
+          <button type="button" onClick={()=>setInlineXRoar(current=>!current)} aria-expanded={inlineXRoar}
+            aria-controls="retroverse-coco-xroar-frame">{inlineXRoar?"CLOSE EXPERIMENTAL FRAME":"TRY IN-PAGE VIEW"}</button>
+        </div>
+      </div>
+      <p className="coco-xroar-guide">Inside XRoar: select <strong>Hardware → Machine → CoCo 3</strong>, provide authorized firmware (usually <code>{COCO3_FIRMWARE[0].name}</code>, {COCO3_FIRMWARE[0].bytes.toLocaleString()} bytes), then load your own CoCo game using XRoar's media controls. The disk controller may need its own ROM. Silpheed is not bundled.</p>
+      {inlineXRoar && <div id="retroverse-coco-xroar-frame" className="coco-xroar-embed">
+        <div className="coco-xroar-embed-note">EXPERIMENTAL EXTERNAL FRAME · If the provider blocks embedding, use the full-page launch instead. CoCo keyboard and browser focus can work better full-page.</div>
+        <iframe title="Official XRoar Online real CoCo emulator (third-party website)"
+          src={XROAR_ONLINE_URL} allow="fullscreen; gamepad" allowFullScreen referrerPolicy="no-referrer" />
+        <a href={XROAR_ONLINE_URL} target="_blank" rel="noopener noreferrer">OPEN FULL-PAGE FALLBACK ↗</a>
+      </div>}
+    </section>
     <div className="coco-layout">
       <div className="coco-machine">
         <div className="coco-monitor">
@@ -132,10 +155,11 @@ export default function CoCo3Room() {
           <p className="coco-fineprint">{cartridge?cartridge.name+" · "+cartridge.bytes.toLocaleString()+" bytes · inspected, not executed":"Bring your own authorized ROM. File name/size inspection only."}</p>
         </div>
         <div className="coco-panel">
-          <h3>WANT TO RUN THE REAL THING?</h3>
-          <p><strong>XRoar</strong> is an independent emulator that supports the CoCo 3 on desktop. Use authorized firmware and game media for original hardware behavior.</p>
-          <a className="coco-external" href="https://www.6809.org.uk/xroar/" target="_blank" rel="noreferrer noopener">OFFICIAL XROAR EMULATOR ↗</a>
-          <p className="coco-fineprint">External desktop program, not embedded here. Local ROM files remain on your own device.</p>
+          <h3>BUILD FROM THE ACTUAL XROAR SOURCE</h3>
+          <p>XRoar is GPLv3-or-later, by Ciaran Anscomb. Its official source supports Emscripten/WebAssembly builds. A reproducible build guide is included in RetroVerse.</p>
+          <a className="coco-external" href={XROAR_HOME_URL} target="_blank" rel="noopener noreferrer">OFFICIAL XROAR PROJECT ↗</a>
+          <a className="coco-external coco-external-secondary" href={XROAR_MANUAL_URL} target="_blank" rel="noopener noreferrer">READ XROAR MANUAL ↗</a>
+          <p className="coco-fineprint">Upstream Git source: <code>{XROAR_SOURCE_URL}</code>. The hosted frame is the developer's website; RetroVerse has not compiled or shipped an XRoar WASM binary.</p>
         </div>
       </aside>
     </div>
