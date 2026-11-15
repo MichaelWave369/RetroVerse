@@ -8,7 +8,7 @@ import {
 } from "../src/questMuseumModel";
 import { museumWalkOrder } from "../src/museumCollection";
 
-test("all nine Time Hall doors have corresponding immersive XR gallery positions", () => {
+test("all ten Time Hall doors have corresponding immersive XR gallery positions", () => {
   assert.equal(QUEST_EXHIBIT_COUNT,10);
   assert.equal(QUEST_EXHIBIT_SPACING,4);
   for(let i=0;i<museumWalkOrder.length;i++){
@@ -27,7 +27,7 @@ test("thumbstick advances exhibit rooms, reverses and clamps at corridor ends",(
   assert.equal(questMoveIndex(0,-1,501),1);
   assert.equal(questMoveIndex(5,1,501),4);
   assert.equal(questMoveIndex(0,1,501),0);
-  assert.equal(questMoveIndex(8,-1,501),8);
+  assert.equal(questMoveIndex(9,-1,501),9);
   assert.equal(questMoveIndex(4,-.2,501),4);
   assert.equal(questMoveIndex(4,-1,100),4);
   assert.throws(()=>questMoveIndex(1,Number.NaN,900),/Invalid Quest/);
@@ -40,7 +40,7 @@ test("column-major matrix multiplication returns identity and translation correc
   assert.deepEqual([...multiplyMat4(id,translate)],[...translate]);
   assert.deepEqual([...multiplyMat4(translate,id)],[...translate]);
   const sum=multiplyMat4(translate,boxModel(4,5,6,1,1,1));
-  assert.deepEqual([sum[12],sum[13],sum[14]],[5,7,10]);
+  assert.deepEqual([sum[12],sum[13],sum[14]],[5,7,9]);
   assert.throws(()=>multiplyMat4([1,2],id),/4x4/);
 });
 
