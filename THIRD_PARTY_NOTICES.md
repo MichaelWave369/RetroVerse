@@ -18,3 +18,10 @@ RetroVerse's application code is MIT-licensed. The following components retain t
 Windows 9x recovered-disk verification reads both the browser-generated image and the visitor-selected downloaded image locally, with a strict bounded-memory comparison. It does not distribute Microsoft Windows or guarantee a guest reboot without separate manual testing.
 
 No Microsoft DOS or commercial game images are included. You must own or be authorized to use any ROM, firmware, disk, or game files that you provide. Booting in a browser does not make copyrighted software public-domain.
+
+
+## XRoar / XRoar Online (external provider, not bundled)
+
+The optional CoCo 3 hardware-emulator launcher directs visitors to the independent XRoar Online service at https://www.6809.org.uk/xroar/online/. The in-page iframe is user-initiated and hosted by XRoar's developer; this repository does not contain or redistribute the XRoar engine, its compiled WebAssembly, firmware ROM images, or any commercial CoCo game.
+
+XRoar is copyright Ciaran Anscomb and contributors, licensed **GNU GPL v3 or later**; official source: https://www.6809.org.uk/git/xroar.git, project: https://www.6809.org.uk/xroar/. The included source-build helper only builds an upstream checkout locally; it does not install the result in the site. If a binary is later bundled or self-hosted, complete GPL redistribution requirements and corresponding source availability must be reviewed at that time.
