@@ -60,7 +60,8 @@ test("remote and compatible exhibits honestly identify their host or limitation"
   assert.equal(museumExhibit("mac").access,"external");
   assert.equal(museumExhibit("c64").access,"external");
   assert.equal(museumExhibit("tandy").access,"compatible");
-  assert.equal(museumExhibit("coco3").access,"compatible");
-  assert.match(museumExhibit("coco3").plaque,/not a real CoCo 3/i);
+  assert.equal(museumExhibit("coco3").access,"external");
+  assert.match(museumExhibit("coco3").plaque,/official XRoar Online/i);
+  assert.match(museumExhibit("coco3").plaque,/not hardware emulation/i);
   assert.match(museumExhibit("tandy").plaque,/not an exact Tandy/i);
 });
