@@ -1,6 +1,6 @@
 /**
  * Canonical RetroVerse museum inventory. The compact machine tabs and the
- * optional Time Hall share the same nine station IDs.
+ * optional Time Hall share the same museum station IDs.
  */
 export type MuseumStationId =
   | "dos" | "xt" | "cabinet" | "tandy" | "win9x"
