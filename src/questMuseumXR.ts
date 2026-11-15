@@ -175,7 +175,7 @@ function makeLabelTexture(gl: WebGL2RenderingContext, i: number): WebGLTexture {
   ctx.font = "26px monospace";
   ctx.fillStyle = "#afc5bb";
   ctx.fillText("Φ RETROVERSE / QUEST 3 VR MUSEUM",45,64);
-  ctx.fillText("EXHIBIT " + String(i+1).padStart(2,"0") + " OF 09 · " + exhibit.period,45,110);
+  ctx.fillText("EXHIBIT " + String(i+1).padStart(2,"0") + " OF " + String(museumWalkOrder.length).padStart(2,"0") + " · " + exhibit.period,45,110);
   ctx.font = "bold 61px sans-serif";
   const name = exhibit.name;
   // Fit very long names without clipping by using a maximum text width.
