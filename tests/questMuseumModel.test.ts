@@ -9,7 +9,7 @@ import {
 import { museumWalkOrder } from "../src/museumCollection";
 
 test("all nine Time Hall doors have corresponding immersive XR gallery positions", () => {
-  assert.equal(QUEST_EXHIBIT_COUNT,9);
+  assert.equal(QUEST_EXHIBIT_COUNT,10);
   assert.equal(QUEST_EXHIBIT_SPACING,4);
   for(let i=0;i<museumWalkOrder.length;i++){
     assert.equal(questExhibitAt(i),museumWalkOrder[i]);
@@ -18,7 +18,7 @@ test("all nine Time Hall doors have corresponding immersive XR gallery positions
     assert.ok(questExhibitLabel(i).length>4);
   }
   assert.throws(()=>questExhibitAt(-1),/Invalid Quest/);
-  assert.throws(()=>questExhibitAt(9),/Invalid Quest/);
+  assert.throws(()=>questExhibitAt(10),/Invalid Quest/);
 });
 
 test("thumbstick advances exhibit rooms, reverses and clamps at corridor ends",()=>{
@@ -40,7 +40,7 @@ test("column-major matrix multiplication returns identity and translation correc
   assert.deepEqual([...multiplyMat4(id,translate)],[...translate]);
   assert.deepEqual([...multiplyMat4(translate,id)],[...translate]);
   const sum=multiplyMat4(translate,boxModel(4,5,6,1,1,1));
-  assert.deepEqual([sum[12],sum[13],sum[14]],[5,7,9]);
+  assert.deepEqual([sum[12],sum[13],sum[14]],[5,7,10]);
   assert.throws(()=>multiplyMat4([1,2],id),/4x4/);
 });
 
