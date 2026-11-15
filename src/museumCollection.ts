@@ -4,7 +4,7 @@
  */
 export type MuseumStationId =
   | "dos" | "xt" | "cabinet" | "tandy" | "win9x"
-  | "mac" | "c64" | "amiga" | "adventures";
+  | "mac" | "c64" | "amiga" | "adventures" | "coco3";
 
 export type MuseumExhibit = {
   id: MuseumStationId;
@@ -45,6 +45,14 @@ export const museumExhibits: readonly MuseumExhibit[] = [
     engine: "js-dos · external runtime", access: "external", emblem: "PLAY",
     plaque: "An arcade shelf for DOS classics. Load a game bundle you have the rights to use, and back up your game library and supported save files.",
     accent: "#f4bb8d",
+  },
+  {
+    id: "coco3", name: "TANDY COCO 3", tag: "BASIC WORKBENCH · 1986",
+    description: "Explore the Color Computer 3 in a local BASIC teaching console.",
+    year: 1986, period: "1986–1991", family: "TRS-80 COLOR COMPUTER 3",
+    engine: "RetroVerse BASIC subset · simulated", access: "compatible", emblem: "COCO",
+    plaque: "The 1986 Color Computer 3 was a 6809-based computer, distinct from the later x86 Tandy 1000 SL/2. This original browser-local BASIC learning workbench is not a real CoCo 3/6809 emulator and cannot run cartridge ROMs. Silpheed (1988) is commemorated, not distributed.",
+    accent: "#c5f39a",
   },
   {
     id: "tandy", name: "TANDY 1000 SL/2", tag: "TANDY-COMPATIBLE · RUNG 08",
