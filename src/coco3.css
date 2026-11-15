@@ -50,3 +50,27 @@
 .coco-external:hover{background:#edffbd}
 @media(max-width:900px){.coco-layout{grid-template-columns:minmax(0,1fr)}.coco-heading{align-items:flex-start}.coco-crt{min-height:280px}.coco-terminal{font-size:clamp(12px,2vw,18px)}}
 @media(max-width:580px){.coco-heading{display:block}.coco-specs{display:none}.coco-machine{padding:8px}.coco-monitor{padding:9px}.coco-crt{min-height:230px;border-width:7px}.coco-terminal{padding:13px;font-size:12px}.coco-keyrow{gap:3px}.coco-keyrow button{min-width:22px;padding:5px 2px;font-size:11px}.coco-keyrow-special button{min-width:28px;flex:1 1 15%}.coco-command button{padding:9px 7px}}
+
+/* Real XRoar Online provider is opt-in and remains a separate third-party origin. */
+.coco-xroar{margin:0 0 19px;padding:19px 21px;background:linear-gradient(130deg,#233a2b,#152b25);border:1px solid #91bb72;color:#dfedcf}
+.coco-xroar-heading{display:flex;align-items:center;justify-content:space-between;gap:19px}
+.coco-xroar-eyebrow{display:block;font:700 10px "DM Mono",monospace;letter-spacing:.09em;color:#d1ef99;margin-bottom:9px}
+.coco-xroar h3{font:700 clamp(15px,2vw,23px) "DM Mono",monospace;letter-spacing:.03em;margin:0 0 9px;color:#eafaab}
+.coco-xroar p{margin:0;font-size:12px;line-height:1.65;color:#bfd2b7}
+.coco-xroar-heading>div:first-child{max-width:720px}
+.coco-xroar-actions{display:flex;flex-wrap:wrap;flex-shrink:0;gap:9px;max-width:440px}
+.coco-xroar-actions a,.coco-xroar-actions button,.coco-xroar-embed>a{padding:13px 14px;min-height:45px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border:1px solid #a5c482;background:#d7f3a6;color:#213820;cursor:pointer;font:700 11px "DM Mono",monospace}
+.coco-xroar-actions button{background:#2a4b35;color:#e5f5d0}
+.coco-xroar-actions a:hover,.coco-xroar-embed>a:hover{background:#eaffc5}
+.coco-xroar-actions button:hover{background:#3c6746}
+.coco-xroar-guide{margin-top:14px!important;border-top:1px solid #536d53;padding-top:12px}
+.coco-xroar-guide strong{color:#e2f4bf}
+.coco-xroar-guide code,.coco-panel code{font:11px "Courier New",monospace;overflow-wrap:anywhere;color:#e8f8bc}
+.coco-xroar-embed{margin-top:17px;border:1px solid #638866;padding:11px;background:#0c1c17}
+.coco-xroar-embed-note{font:10px/1.6 "DM Mono",monospace;color:#cde0b7;padding:7px 4px 12px}
+.coco-xroar-embed iframe{width:100%;height:min(72vh,760px);min-height:380px;border:0;background:#0a130f;display:block}
+.coco-xroar-embed>a{margin-top:10px;max-width:300px}
+.coco-external-secondary{background:#344d36;color:#eaf3da;margin-top:8px}
+.coco-external-secondary:hover{background:#4e6e4e}
+@media(max-width:1040px){.coco-xroar-heading{align-items:stretch;flex-direction:column}.coco-xroar-actions{max-width:none}}
+@media(max-width:580px){.coco-xroar{padding:13px}.coco-xroar-actions{display:grid;grid-template-columns:1fr}.coco-xroar-embed iframe{height:450px;min-height:300px}}
