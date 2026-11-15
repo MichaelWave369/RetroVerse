@@ -148,7 +148,7 @@ export default function MuseumWalk({ activeStation, liveGuest, visited, onEnter,
           </div>
 
           <div className="timehall-map">
-            <div className="timehall-map-title"><strong>THE NINE EXHIBIT DOORS</strong><span>SELECT ANY ERA</span></div>
+            <div className="timehall-map-title"><strong>THE MUSEUM EXHIBIT DOORS</strong><span>SELECT ANY ERA</span></div>
             <div className="timehall-map-track" role="group" aria-label="Chronological exhibit timeline">
               {museumWalkOrder.map((id, i) => {
                 const exhibit = museumExhibit(id);

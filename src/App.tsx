@@ -5,6 +5,7 @@ import GameCabinet from "./GameCabinet";
 import AmigaRoom from "./AmigaRoom";
 import AdventureRoom from "./AdventureRoom";
 import TandyRoom from "./TandyRoom";
+import CoCo3Room from "./CoCo3Room";
 import MacintoshRoom from "./MacintoshRoom";
 import C64Room from "./C64Room";
 import PcXtRoom from "./PcXtRoom";
@@ -272,14 +273,14 @@ export default function App() {
           <div className="eyebrow"><span className="small-square" /> THE LIVING COMPUTER MUSEUM <span className="hero-rule" /> EST. 2026</div>
           <h1>Φ RETRO<em>VERSE.</em></h1>
           <p>Real machines. Real boot sequences. Real memories. Step inside decades of computing history, powered entirely by your browser.</p>
-          <div className="hero-stats"><span><b>09</b> MUSEUM STATIONS</span><span><b>08</b> EMULATOR EXPERIENCES</span><span><b>100%</b> BROWSER-BASED</span></div>
+          <div className="hero-stats"><span><b>10</b> MUSEUM STATIONS</span><span><b>09</b> INTERACTIVE / EMULATOR EXPERIENCES</span><span><b>100%</b> BROWSER-BASED</span></div>
         </section>
 
         <section className="museum" aria-label="Computer stations">
           <div className="section-head"><span>01 / CHOOSE A MACHINE</span>
             <button type="button" className="museum-open-button" onClick={() => setTimeHallOpen(true)}
               aria-haspopup="dialog" aria-label="Explore the RetroVerse Time Hall museum">
-              ◈ EXPLORE TIME HALL <span aria-hidden="true">· {visitedExhibits.length}/9 STAMPS</span>
+              ◈ EXPLORE TIME HALL <span aria-hidden="true">· {visitedExhibits.length}/{stations.length} STAMPS</span>
             </button>
           </div>
           <div className="stations">
@@ -292,10 +293,10 @@ export default function App() {
                 aria-pressed={station === item.id}
               >
                 <span className="station-number">0{index + 1} / 0{stations.length}</span>
-                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "xt" ? "▤" : item.id === "cabinet" ? "◈" : item.id === "tandy" ? "▥" : item.id === "win9x" ? "⊞" : item.id === "mac" ? "◉" : item.id === "c64" ? "▦" : item.id === "amiga" ? "⌘" : "▤"}</span>
+                <span className={"station-icon " + item.id} aria-hidden="true">{item.id === "dos" ? "▣" : item.id === "xt" ? "▤" : item.id === "cabinet" ? "◈" : item.id === "coco3" ? "▨" : item.id === "tandy" ? "▥" : item.id === "win9x" ? "⊞" : item.id === "mac" ? "◉" : item.id === "c64" ? "▦" : item.id === "amiga" ? "⌘" : "▤"}</span>
                 <strong>{item.name}</strong>
                 <span className="station-description">{item.description}</span>
-                <span className={"station-tag" + ((item.id === "dos" || item.id === "xt" || item.id === "cabinet" || item.id === "tandy" || item.id === "win9x" || item.id === "mac" || item.id === "c64" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
+                <span className={"station-tag" + ((item.id === "dos" || item.id === "xt" || item.id === "cabinet" || item.id === "coco3" || item.id === "tandy" || item.id === "win9x" || item.id === "mac" || item.id === "c64" || item.id === "amiga" || item.id === "adventures") ? " ready" : "")}>{item.tag}</span>
               </button>
             ))}
           </div>
@@ -395,6 +396,8 @@ export default function App() {
           <PcXtRoom />
         ) : station === "cabinet" ? (
           <GameCabinet />
+        ) : station === "coco3" ? (
+          <CoCo3Room />
         ) : station === "tandy" ? (
           <TandyRoom onGoToPc={() => chooseStation("dos")} />
         ) : station === "win9x" ? (
@@ -412,7 +415,7 @@ export default function App() {
 
         <section className="disclaimer">
           <span className="disclaimer-mark">✳</span>
-          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not include Microsoft DOS or Windows 95/98 media, IBM 5150/5160 BIOS ROMs, Tandy DeskMate ROMs, Commodore 64 KERNAL/BASIC/CHARGEN ROMs, Apple Macintosh firmware/system images, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Tandy compatibility uses DOSBox rather than original SL/2 firmware. Import only media you are authorized to use; local images stay on your device. No guest networking is enabled by default.</p></div>
+          <div><strong>REAL EMULATION. RESPECTFUL PRESERVATION.</strong><p>RetroVerse does not include Microsoft DOS or Windows 95/98 media, IBM 5150/5160 BIOS ROMs, Tandy DeskMate ROMs, Commodore 64 KERNAL/BASIC/CHARGEN ROMs, Apple Macintosh firmware/system images, Amiga Kickstart or commercial games. Open-source firmware and a FreeDOS sample power the first station. Tandy compatibility uses DOSBox rather than original SL/2 firmware. The CoCo 3 BASIC workbench is an educational simulation, not genuine 6809 emulation, and it does not execute ROMs. Import only media you are authorized to use; local images stay on your device. No guest networking is enabled by default.</p></div>
         </section>
       </main>
       <footer><span>Φ369 LABS / ENTER THE FIELD</span><span><a href="https://github.com/MichaelWave369/RetroVerse" target="_blank" rel="noreferrer">SOURCE ON GITHUB ↗</a> &nbsp; · &nbsp; OPEN SOURCE · LOCAL FIRST</span></footer>

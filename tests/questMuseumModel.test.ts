@@ -8,8 +8,8 @@ import {
 } from "../src/questMuseumModel";
 import { museumWalkOrder } from "../src/museumCollection";
 
-test("all nine Time Hall doors have corresponding immersive XR gallery positions", () => {
-  assert.equal(QUEST_EXHIBIT_COUNT,9);
+test("all ten Time Hall doors have corresponding immersive XR gallery positions", () => {
+  assert.equal(QUEST_EXHIBIT_COUNT,10);
   assert.equal(QUEST_EXHIBIT_SPACING,4);
   for(let i=0;i<museumWalkOrder.length;i++){
     assert.equal(questExhibitAt(i),museumWalkOrder[i]);
@@ -18,7 +18,7 @@ test("all nine Time Hall doors have corresponding immersive XR gallery positions
     assert.ok(questExhibitLabel(i).length>4);
   }
   assert.throws(()=>questExhibitAt(-1),/Invalid Quest/);
-  assert.throws(()=>questExhibitAt(9),/Invalid Quest/);
+  assert.throws(()=>questExhibitAt(10),/Invalid Quest/);
 });
 
 test("thumbstick advances exhibit rooms, reverses and clamps at corridor ends",()=>{
@@ -27,7 +27,7 @@ test("thumbstick advances exhibit rooms, reverses and clamps at corridor ends",(
   assert.equal(questMoveIndex(0,-1,501),1);
   assert.equal(questMoveIndex(5,1,501),4);
   assert.equal(questMoveIndex(0,1,501),0);
-  assert.equal(questMoveIndex(8,-1,501),8);
+  assert.equal(questMoveIndex(9,-1,501),9);
   assert.equal(questMoveIndex(4,-.2,501),4);
   assert.equal(questMoveIndex(4,-1,100),4);
   assert.throws(()=>questMoveIndex(1,Number.NaN,900),/Invalid Quest/);

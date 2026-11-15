@@ -1,6 +1,6 @@
 # RetroVerse
 
-A real retro-computer time machine in your browser. **Nine museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, Tandy 1000 SL/2 compatibility, Windows 95/98, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
+A real retro-computer time machine in your browser. **Ten museum stations: DOS PC, original IBM PC/XT 8088, DOS Game Cabinet, CoCo 3 BASIC workbench, Tandy 1000 SL/2 compatibility, Windows 95/98, Macintosh 68k, Commodore 64, Amiga, and the ScummVM adventure portal.**
 
 RetroVerse starts with an IBM PC-compatible computer powered by [v86](https://github.com/copy/v86) and WebAssembly. It boots an actual DOS disk image, not a pretend terminal. A retro CRT desktop surrounds the live emulated computer.
 
@@ -78,13 +78,13 @@ The optional **Time Hall** now offers **ENTER QUEST 3 VR**, a true native WebXR 
 
 **Safety, user experience and performance:** Immersive support is detected through `navigator.xr.isSessionSupported("immersive-vr")`, not a user-agent guess. The immersive session only starts after a direct user action. The WebXR layer and graphics resources stay unloaded until VR is requested; desktop/phone navigation remains compact and functional. Visitors can exit using their headset menu. The WebXR API requires HTTPS and device/browser permission. It is optional and **not available on all browsers**.
 
-**Tests:** Four new pure tests validate the nine-door WebXR map, thumbstick thresholds/clamping, column-major matrix multiplication, and spatial transform correctness, alongside the entire museum/emulator regression suite. CI confirms TypeScript and production-build health; **actual stereo rendering, input axes mapping, trigger events, comfort and portal navigation must be smoke-tested on Quest 3** after Pages deployment. The exact thumbstick axes can differ by controller/browser; test on both of your Quest 3 headsets.
+**Tests:** Four new pure tests validate the ten-door WebXR map, thumbstick thresholds/clamping, column-major matrix multiplication, and spatial transform correctness, alongside the entire museum/emulator regression suite. CI confirms TypeScript and production-build health; **actual stereo rendering, input axes mapping, trigger events, comfort and portal navigation must be smoke-tested on Quest 3** after Pages deployment. The exact thumbstick axes can differ by controller/browser; test on both of your Quest 3 headsets.
 
 **Browser notes:** [Meta Quest Browser specifications](https://developers.meta.com/vr/documentation/web/browser-specs/), [MDN WebXR immersive session guidance](https://developer.mozilla.org/en-US/docs/Web/API/XRSystem/requestSession).
 
 ## Rung 15: The Time Hall · optional explorable history gallery
 
-RetroVerse now includes an optional **Time Hall** museum experience. Select the small **EXPLORE TIME HALL** button next to the original compact machine tabs. The hall opens as a full-screen, accessible overlay, with a CSS perspective corridor, nine unique computer exhibits, period plaques, hardware-inspired visual displays and a chronological timeline. Select a door or press Left/Right arrows to walk between eras. **ENTER THIS COMPUTER** closes the hall and takes you straight to the real existing emulator station.
+RetroVerse now includes an optional **Time Hall** museum experience. Select the small **EXPLORE TIME HALL** button next to the original compact machine tabs. The hall opens as a full-screen, accessible overlay, with a CSS perspective corridor, ten unique computer exhibits, period plaques, hardware-inspired visual displays and a chronological timeline. Select a door or press Left/Right arrows to walk between eras. **ENTER THIS COMPUTER** closes the hall and takes you straight to the real existing emulator station.
 
 **Screen-first default preserved:** The Time Hall is **closed by default**; no giant gallery is inserted ahead of the emulator. The compact station tabs stay usable and the computer display remains near the top of the page. Merely opening the hall does not launch, iframe, preload or contact any third-party emulator. Its hardware visuals are CSS illustrations, **not fake playable software** and not an actual walkable 3D/VR/WebXR engine.
 
@@ -94,7 +94,7 @@ RetroVerse now includes an optional **Time Hall** museum experience. Select the 
 
 **Scope and honesty:** The historical timeline is an educational *curation*, not a literal model of hardware generations: for example, the DOS station is displayed as the 1990s DOS era despite using a later v86 x86 machine, while the original IBM PC/XT is correctly situated in 1981–83. Externally hosted, local and compatibility-based emulator experiences are labeled separately. Existing media/ROM/rights policies are unchanged. A real WebXR gallery with Quest 3 controls remains a separate future milestone.
 
-**QA:** Check the nine unique doors, chronological order, mobile horizontal timeline, visited stamps, navigation to every existing station, and focus handling. Switching from an active DOS/Windows guest still follows the existing safety checks before unmounting a live machine. The pure inventory and route model has five new automated tests; UI exploration needs manual browser testing after deployment.
+**QA:** Check the ten unique doors, chronological order, mobile horizontal timeline, visited stamps, navigation to every existing station, and focus handling. Switching from an active DOS/Windows guest still follows the existing safety checks before unmounting a live machine. The pure inventory and route model has five new automated tests; UI exploration needs manual browser testing after deployment.
 
 ## Rung 14: Verify your Windows 9x disk download and restore it
 
@@ -245,7 +245,7 @@ The `predev` and `prebuild` scripts copy the v86 WASM files, download pinned Sea
 12. **Windows 95/98:** real v86 guest with user-owned raw disks and optional floppy/ISO media.
 13. **Windows disk export:** save guest-written files by downloading a new updated raw image, guarded against incompatible v86 internals. Future: tested automatic, incremental backups.
 14. **Windows download verification:** compare an actual browser-downloaded updated image byte-for-byte and select a verified image for next boot.
-15. **Time Hall museum:** optional CSS-perspective nine-exhibit history corridor, keyboard navigation, portable screen-first layout and browser-local visit stamps.
+15. **Time Hall museum:** optional CSS-perspective ten-exhibit history corridor, keyboard navigation, portable screen-first layout and browser-local visit stamps.
 16. **Quest WebXR museum:** native immersive stereo WebGL2 gallery and thumbstick/trigger exhibit transitions on supported headsets, without shipping proprietary ROMs.
 17. **VR exhibit inspection:** first-trigger large in-world plaque, second-trigger portal, and read-only same-origin DOS/Windows CRT preview.
 18. **Future shared XR:** tracked controller-ray UI, Quest 3 co-presence, and separately governed interactive emulator surfaces.
@@ -257,3 +257,7 @@ Application code: MIT. Emulation dependencies, BIOS firmware and operating-syste
 **No guest networking is enabled by default.** Local files are loaded into memory and not sent to a RetroVerse backend.
 
 Developed as part of the Φ369 Labs open computing ecosystem.
+
+## CoCo 3: the first-computer exhibit (2026)
+
+RetroVerse now also includes a distinct 1986 TRS-80 Color Computer 3 room, separate from the later Tandy 1000 SL/2. It has a CRT-themed, browser-local BASIC learning workbench with numbered programs, simple branching, source import/export, physical/on-screen keyboard and a Silpheed memory plaque. **It is an educational BASIC subset, not 6809/CoCo 3 hardware emulation, and it cannot execute cartridge ROMs.** Bring authorized firmware and game files to an independent real emulator such as [XRoar](https://www.6809.org.uk/xroar/). The local cartridge picker only inspects filename and size; no game/ROM media is shipped or uploaded. See [CoCo 3 exhibit guide](docs/coco3.md) for supported commands and QA.
